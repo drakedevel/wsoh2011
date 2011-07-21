@@ -1,0 +1,16 @@
+`define ALU_LEFT 5'd0
+`define ALU_RIGHT 5'd1
+`define ALU_BITOR 5'd2
+`define ALU_BITXOR 5'd3
+`define ALU_BITAND 5'd4
+`define ALU_EQ 5'd5
+`define ALU_NE 5'd6
+`define ALU_LT 5'd7
+`define ALU_LE 5'd8
+`define ALU_GT 5'd9
+`define ALU_GE 5'd10
+`define ALU_LSH 5'd11
+`define ALU_RSH 5'd12
+`define ALU_URSH 5'd13
+`define ALU_ADD 5'd14
+`define ALU_SUB 5'd15

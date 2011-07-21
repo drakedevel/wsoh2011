@@ -1,0 +1,4 @@
+run
+-ifn cellram.prj
+-ofn cellram.ngc
+-p xc3s1200e-fg320

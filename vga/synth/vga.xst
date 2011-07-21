@@ -1,0 +1,5 @@
+run
+-ifn vga.prj
+-ofn vga.ngc
+-p xc3s1200e-5fg320
+-top top

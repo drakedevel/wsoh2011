@@ -1,0 +1,3 @@
+verilog work ../rtl/top.v
+verilog work ../rtl/seven_seg_control.v
+verilog work ../rtl/cellram_control.v

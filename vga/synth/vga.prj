@@ -1,0 +1,4 @@
+verilog work ../rtl/vga_stage_rectangle.v
+verilog work ../rtl/vga_pipeline.v
+verilog work ../rtl/vga_core.v
+verilog work ../rtl/top.v
