@@ -44,6 +44,7 @@ module cpu_decode(/*AUTOARG*/
 
    /// INTERNAL SIGNALS ///
 
+   wire 	     killed;
    wire [7:0] 	     opcode;
    wire 	     mc__stall;
    reg [10:0]        c__top_n_offset;
@@ -56,6 +57,8 @@ module cpu_decode(/*AUTOARG*/
    
    /// COMBINATIONAL LOGIC ///
 
+   assign killed = kill_4a;
+
    assign mc__stall = c__to_push_2a || st__to_pop_2a ||
 		      c__to_push_3a || st__to_pop_3a ||
 		      c__to_push_4a || st__to_pop_4a ||
@@ -63,7 +66,7 @@ module cpu_decode(/*AUTOARG*/
    assign stall_2a = mc__more_2a || mc__stall;
 
    assign js_mode = pc_1a[0];
-   assign opcode = instruction_1a[47:40];
+   assign opcode = killed ? 8'b0 : instruction_1a[47:40];
 
    assign alu__op_2a = mc__control_2a[5:1];
    assign st__to_pop_2a = { 9'b0, mc__control_2a[7:6] };

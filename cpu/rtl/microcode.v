@@ -42,7 +42,7 @@ module microcode(/*AUTOARG*/
 
    // Next PC
    always @* begin
-      if (mc__more_2a) begin
+      if (mc__more_2a && !killed) begin
 	 next_micro_valid = 1'b1;
 	 next_micro_pc = micro_pc + 1;
       end else begin
@@ -60,7 +60,7 @@ module microcode(/*AUTOARG*/
 	 micro_pc <= 10'h0;
 	 // End of automatics
       end else begin
-	 if (mc__stall) begin
+	 if (mc__stall && !killed) begin
 	    micro_op_hack[31:1] <= 31'b0;
 	 end else begin
 	    micro_op_hack <= next_micro_op_hack;

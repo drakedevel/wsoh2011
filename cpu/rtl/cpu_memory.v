@@ -30,6 +30,19 @@ module cpu_memory(/*AUTOARG*/
    /// WORLD INTERFACE ///
 
    input 	     clk, rst_b;
+
+   /// INTERNAL SIGNALS ///
+
+   /*AUTOWIRE*/
+   // Beginning of automatic wires (for undeclared instantiated-module outputs)
+   wire			Hsync;			// From IO of iobus.v
+   wire			Vsync;			// From IO of iobus.v
+   wire [31:0]		bus__rddata_4a;		// From IO of iobus.v
+   wire [7:0]		leds;			// From IO of iobus.v
+   wire [2:3]		vgaBlue;		// From IO of iobus.v
+   wire [1:3]		vgaGreen;		// From IO of iobus.v
+   wire [1:3]		vgaRed;			// From IO of iobus.v
+   // End of automatics
    
    /// SEQUENTIAL LOGIC ///
 
@@ -110,5 +123,25 @@ module cpu_memory(/*AUTOARG*/
 	 pc_4a <= pc_3a; 
       end
    end
+
+   /*
+   iobus IO(/*AUTOINST*-/
+	    // Outputs
+	    .bus__rddata_4a		(bus__rddata_4a[31:0]),
+	    .leds			(leds[7:0]),
+	    .Hsync			(Hsync),
+	    .Vsync			(Vsync),
+	    .vgaBlue			(vgaBlue[2:3]),
+	    .vgaGreen			(vgaGreen[1:3]),
+	    .vgaRed			(vgaRed[1:3]),
+	    // Inputs
+	    .clk			(clk),
+	    .rst_b			(rst_b),
+	    .bus__rdstrobe_3a		(bus__rdstrobe_3a),
+	    .bus__wrstrobe_3a		(bus__wrstrobe_3a),
+	    .bus__address_3a		(bus__address_3a[7:0]),
+	    .bus__wrdata_3a		(bus__wrdata_3a[31:0]),
+	    .switches			(switches[7:0]));
    
+   */
 endmodule
