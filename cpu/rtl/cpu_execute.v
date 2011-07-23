@@ -53,7 +53,7 @@ module cpu_execute(/*AUTOARG*/
 
    /// COMBINATIONAL LOGIC ///
 
-   assign killed = kill_4a
+   assign killed = kill_4a;
 
    always @* begin
       case (c__alu_left_2a)
