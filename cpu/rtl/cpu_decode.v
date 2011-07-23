@@ -99,6 +99,7 @@ module cpu_decode(/*AUTOARG*/
 		       .mc__more_2a	(mc__more_2a),
 		       // Inputs
 		       .js_mode		(js_mode),
+		       .kill_4a		(kill_4a),
 		       .mc__stall	(mc__stall),
 		       .opcode		(opcode[7:0]),
 		       .clk		(clk),
