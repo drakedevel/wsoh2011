@@ -25,7 +25,7 @@ module cpu_fetch(/*AUTOARG*/
    
    /// COMBINATIONAL LOGIC ///
   
-   assign hatch_address = kill_4a ? branch_target_4a : next_pc;
+   assign hatch_address = { (kill_4a ? branch_target_4a : next_pc) >> 1, 1'b0 };
    
    /// SEQUENTIAL LOGIC ///
    
@@ -34,7 +34,7 @@ module cpu_fetch(/*AUTOARG*/
 	 /*AUTORESET*/
 	 // Beginning of autoreset for uninitialized flops
 	 instruction_1a <= 48'h0;
-	 next_pc <= 32'h0;
+	 next_pc <= 32'h00000001;
 	 pc_1a <= 32'h0;
 	 // End of automatics
       end else begin

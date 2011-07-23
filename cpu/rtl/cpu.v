@@ -16,7 +16,7 @@ module cpu(/*AUTOARG*/
    /*AUTOINPUT*/
    // Beginning of automatic inputs (from unused autoinst inputs)
    input		clk;			// To Fetch of cpu_fetch.v, ...
-   input [47:0]		hatch_instruction;	// To Fetch of cpu_fetch.v
+   input [47:0]		hatch_instruction;	// To Fetch of cpu_fetch.v, ...
    input		rst_b;			// To Fetch of cpu_fetch.v, ...
    input [10:0]		st__saved_pc_2a;	// To Execute of cpu_execute.v
    input [10:0]		st__saved_sp_3a;	// To Decode of cpu_decode.v
@@ -130,6 +130,7 @@ module cpu(/*AUTOARG*/
 		       .instruction_2a	(instruction_2a[47:0]),
 		       .kill_4a		(kill_4a),
 		       .pc_2a		(pc_2a[31:0]),
+		       .pc_1a		(pc_1a[31:0]),
 		       .st__top_0_2a	(st__top_0_2a[34:0]),
 		       .st__top_n_2a	(st__top_n_2a[34:0]),
 		       .st__to_pop_2a	(st__to_pop_2a[10:0]),
@@ -174,6 +175,7 @@ module cpu(/*AUTOARG*/
    // synthesis translate_off
    cpu_debug Debug(/*AUTOINST*/
 		   // Inputs
+		   .hatch_instruction	(hatch_instruction[47:0]),
 		   .kill_4a		(kill_4a),
 		   .pc_1a		(pc_1a[31:0]),
 		   .pc_2a		(pc_2a[31:0]),

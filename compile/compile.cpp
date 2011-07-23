@@ -112,6 +112,8 @@ static void EmitFunction(JSContext *cx, FunctionInfo &fun)
             break;
         }
         case JOF_ATOM: {
+            if (*pc == JSOP_DOUBLE)
+                errx(2, "JSOP_DOUBLE");
             JSAtom *atom;
             GET_ATOM_FROM_BYTECODE(s, pc, 0, atom);
             FunctionInfo *found = NULL;

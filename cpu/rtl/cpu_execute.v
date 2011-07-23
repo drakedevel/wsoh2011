@@ -8,8 +8,8 @@ module cpu_execute(/*AUTOARG*/
    // Inputs
    alu__op_2a, c__alu_left_2a, c__alu_right_2a, c__branch_2a,
    c__to_push_2a, c__r0_2a, c__r1_2a, instruction_2a, kill_4a, pc_2a,
-   st__top_0_2a, st__top_n_2a, st__to_pop_2a, st__saved_pc_2a, clk,
-   rst_b
+   pc_1a, st__top_0_2a, st__top_n_2a, st__to_pop_2a, st__saved_pc_2a,
+   clk, rst_b
    );
 
    /// PIPELINE INTERFACE ///
@@ -34,6 +34,7 @@ module cpu_execute(/*AUTOARG*/
    input [47:0]      instruction_2a;
    input 	     kill_4a;
    input [31:0]      pc_2a;
+   input [31:0]      pc_1a;
    input [34:0]      st__top_0_2a;
    input [34:0]      st__top_n_2a;
    input [10:0]      st__to_pop_2a;
@@ -68,7 +69,7 @@ module cpu_execute(/*AUTOARG*/
 	`UC_LEFT_STK1:
 	  alu__left = st__top_n_2a[31:0];
 	`UC_LEFT_PC:
-	  alu__left = pc_2a;
+	  alu__left = pc_1a;
 	default:
 	  alu__left = 32'bx;
       endcase
