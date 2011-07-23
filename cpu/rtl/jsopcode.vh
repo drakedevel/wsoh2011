@@ -1,5 +1,5 @@
 `define JSOP_NOP 8'd0			// Done
-`define JSOP_PUSH 8'd1			// Done N.B. Expando a real JSOP_PUSH to have an immediate undefined value
+`define JSOP_PUSH 8'd1			// Done - must have undefined immediate
 `define JSOP_POPV 8'd2
 `define JSOP_ENTERWITH 8'd3
 `define JSOP_LEAVEWITH 8'd4
@@ -38,7 +38,7 @@
 `define JSOP_DELPROP 8'd37
 `define JSOP_DELELEM 8'd38
 `define JSOP_TYPEOF 8'd39
-`define JSOP_VOID 8'd40			// Done N.B. like JSOP_PUSH, must have immediate undefined value
+`define JSOP_VOID 8'd40			// Done - must have undefined immediate
 `define JSOP_INCNAME 8'd41
 `define JSOP_INCPROP 8'd42
 `define JSOP_INCELEM 8'd43
@@ -60,12 +60,12 @@
 `define JSOP_NAME 8'd59
 `define JSOP_DOUBLE 8'd60
 `define JSOP_STRING 8'd61
-`define JSOP_ZERO 8'd62
-`define JSOP_ONE 8'd63
-`define JSOP_NULL 8'd64
+`define JSOP_ZERO 8'd62			// Done - must have int:0 immediate
+`define JSOP_ONE 8'd63			// Done - must have int:1 immediate
+`define JSOP_NULL 8'd64			// Done - must have undefined immediate
 `define JSOP_THIS 8'd65
-`define JSOP_FALSE 8'd66
-`define JSOP_TRUE 8'd67
+`define JSOP_FALSE 8'd66		// Done - must have int:0 immediate
+`define JSOP_TRUE 8'd67			// Done - must have int:1 immediate
 `define JSOP_OR 8'd68
 `define JSOP_AND 8'd69
 `define JSOP_TABLESWITCH 8'd70
@@ -219,8 +219,8 @@
 `define JSOP_CALLLOCAL 8'd218
 `define JSOP_CALLARG 8'd219
 `define JSOP_BINDGNAME 8'd220
-`define JSOP_INT8 8'd221
-`define JSOP_INT32 8'd222
+`define JSOP_INT8 8'd221		// Done - must have int:blah immediate
+`define JSOP_INT32 8'd222		// Done - must have int:blah immediate
 `define JSOP_LENGTH 8'd223
 `define JSOP_HOLE 8'd224
 `define JSOP_DEFFUN_FC 8'd225

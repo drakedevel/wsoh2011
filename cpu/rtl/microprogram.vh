@@ -9,6 +9,13 @@ initial begin
     microprogram_label[{ 1'b1, `JSOP_IFEQ }] = { 1'b1, `UC_OFFSET_JSOP_IFEQ };
     microprogram_label[{ 1'b1, `JSOP_IFNE }] = { 1'b1, `UC_OFFSET_JSOP_IFNE };
     microprogram_label[{ 1'b1, `JSOP_PUSH }] = { 1'b1, `UC_OFFSET_JSOP_PUSH };
+    microprogram_label[{ 1'b1, `JSOP_ZERO }] = { 1'b1, `UC_OFFSET_JSOP_ZERO };
+    microprogram_label[{ 1'b1, `JSOP_ONE }] = { 1'b1, `UC_OFFSET_JSOP_ONE };
+    microprogram_label[{ 1'b1, `JSOP_FALSE }] = { 1'b1, `UC_OFFSET_JSOP_FALSE };
+    microprogram_label[{ 1'b1, `JSOP_TRUE }] = { 1'b1, `UC_OFFSET_JSOP_TRUE };
+    microprogram_label[{ 1'b1, `JSOP_NULL }] = { 1'b1, `UC_OFFSET_JSOP_NULL };
+    microprogram_label[{ 1'b1, `JSOP_INT8 }] = { 1'b1, `UC_OFFSET_JSOP_INT8 };
+    microprogram_label[{ 1'b1, `JSOP_INT32 }] = { 1'b1, `UC_OFFSET_JSOP_INT32 };
     microprogram_label[{ 1'b1, `JSOP_DUP }] = { 1'b1, `UC_OFFSET_JSOP_DUP };
     microprogram_label[{ 1'b1, `JSOP_DUP2 }] = { 1'b1, `UC_OFFSET_JSOP_DUP2 };
     microprogram_label[{ 1'b1, `JSOP_BITOR }] = { 1'b1, `UC_OFFSET_JSOP_BITOR };
