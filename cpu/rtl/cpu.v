@@ -1,8 +1,8 @@
 module cpu(/*AUTOARG*/
    // Outputs
-   hatch_address,
+   st__sp_2a, st__saved_pc_3a, hatch_address,
    // Inputs
-   rst_b, hatch_instruction, clk
+   st__saved_sp_3a, st__saved_pc_2a, rst_b, hatch_instruction, clk
    );
 
    /// WORLD INTERFACE ///
@@ -10,12 +10,16 @@ module cpu(/*AUTOARG*/
    /*AUTOOUTPUT*/
    // Beginning of automatic outputs (from unused autoinst outputs)
    output [31:0]	hatch_address;		// From Fetch of cpu_fetch.v
+   output [10:0]	st__saved_pc_3a;	// From Execute of cpu_execute.v
+   output [10:0]	st__sp_2a;		// From Decode of cpu_decode.v
    // End of automatics
    /*AUTOINPUT*/
    // Beginning of automatic inputs (from unused autoinst inputs)
    input		clk;			// To Fetch of cpu_fetch.v, ...
    input [47:0]		hatch_instruction;	// To Fetch of cpu_fetch.v
    input		rst_b;			// To Fetch of cpu_fetch.v, ...
+   input [10:0]		st__saved_pc_2a;	// To Execute of cpu_execute.v
+   input [10:0]		st__saved_sp_3a;	// To Decode of cpu_decode.v
    // End of automatics
 
    /// INTERNAL SIGNALS ///
@@ -53,7 +57,7 @@ module cpu(/*AUTOARG*/
    wire [34:0]		st__to_push_4a;		// From Memory of cpu_memory.v
    wire [34:0]		st__to_push_5a;		// From Writeback of cpu_writeback.v
    wire [34:0]		st__top_0_2a;		// From Decode of cpu_decode.v
-   wire [34:0]		st__top_1_2a;		// From Decode of cpu_decode.v
+   wire [34:0]		st__top_n_2a;		// From Decode of cpu_decode.v
    wire			stall_2a;		// From Decode of cpu_decode.v
    // End of automatics
 
@@ -85,8 +89,9 @@ module cpu(/*AUTOARG*/
 		     .pc_2a		(pc_2a[31:0]),
 		     .stall_2a		(stall_2a),
 		     .st__top_0_2a	(st__top_0_2a[34:0]),
-		     .st__top_1_2a	(st__top_1_2a[34:0]),
+		     .st__top_n_2a	(st__top_n_2a[34:0]),
 		     .st__to_pop_2a	(st__to_pop_2a[10:0]),
+		     .st__sp_2a		(st__sp_2a[10:0]),
 		     // Inputs
 		     .instruction_1a	(instruction_1a[47:0]),
 		     .kill_4a		(kill_4a),
@@ -94,6 +99,7 @@ module cpu(/*AUTOARG*/
 		     .st__push_5a	(st__push_5a),
 		     .st__to_pop_5a	(st__to_pop_5a[10:0]),
 		     .st__to_push_5a	(st__to_push_5a[34:0]),
+		     .st__saved_sp_3a	(st__saved_sp_3a[10:0]),
 		     .c__to_push_3a	(c__to_push_3a[2:0]),
 		     .c__to_push_4a	(c__to_push_4a[2:0]),
 		     .st__to_pop_3a	(st__to_pop_3a[10:0]),
@@ -112,6 +118,7 @@ module cpu(/*AUTOARG*/
 		       .r0_3a		(r0_3a[34:0]),
 		       .r1_3a		(r1_3a[34:0]),
 		       .st__to_pop_3a	(st__to_pop_3a[10:0]),
+		       .st__saved_pc_3a	(st__saved_pc_3a[10:0]),
 		       // Inputs
 		       .alu__op_2a	(alu__op_2a[4:0]),
 		       .c__alu_left_2a	(c__alu_left_2a[1:0]),
@@ -124,8 +131,9 @@ module cpu(/*AUTOARG*/
 		       .kill_4a		(kill_4a),
 		       .pc_2a		(pc_2a[31:0]),
 		       .st__top_0_2a	(st__top_0_2a[34:0]),
-		       .st__top_1_2a	(st__top_1_2a[34:0]),
+		       .st__top_n_2a	(st__top_n_2a[34:0]),
 		       .st__to_pop_2a	(st__to_pop_2a[10:0]),
+		       .st__saved_pc_2a	(st__saved_pc_2a[10:0]),
 		       .clk		(clk),
 		       .rst_b		(rst_b));
 
@@ -175,7 +183,7 @@ module cpu(/*AUTOARG*/
 		   .st__push_5a		(st__push_5a),
 		   .st__to_push_5a	(st__to_push_5a[34:0]),
 		   .st__top_0_2a	(st__top_0_2a[34:0]),
-		   .st__top_1_2a	(st__top_1_2a[34:0]),
+		   .st__top_n_2a	(st__top_n_2a[34:0]),
 		   .clk			(clk),
 		   .rst_b		(rst_b));
    // synthesis translate_on

@@ -2,11 +2,11 @@ module cpu_decode(/*AUTOARG*/
    // Outputs
    alu__op_2a, c__alu_left_2a, c__alu_right_2a, c__branch_2a,
    c__to_push_2a, c__r0_2a, c__r1_2a, instruction_2a, pc_2a, stall_2a,
-   st__top_0_2a, st__top_1_2a, st__to_pop_2a,
+   st__top_0_2a, st__top_n_2a, st__to_pop_2a, st__sp_2a,
    // Inputs
    instruction_1a, kill_4a, pc_1a, st__push_5a, st__to_pop_5a,
-   st__to_push_5a, c__to_push_3a, c__to_push_4a, st__to_pop_3a,
-   st__to_pop_4a, clk, rst_b
+   st__to_push_5a, st__saved_sp_3a, c__to_push_3a, c__to_push_4a,
+   st__to_pop_3a, st__to_pop_4a, clk, rst_b
    );
 
    /// PIPELINE INTERFACE ///
@@ -22,8 +22,9 @@ module cpu_decode(/*AUTOARG*/
    output reg [31:0] pc_2a;
    output 	     stall_2a;
    output [34:0]     st__top_0_2a;
-   output [34:0]     st__top_1_2a;
+   output [34:0]     st__top_n_2a;
    output [10:0]     st__to_pop_2a;
+   output [10:0]     st__sp_2a;
    input [47:0]      instruction_1a;
    input 	     kill_4a;
    input [31:0]      pc_1a;
@@ -31,6 +32,7 @@ module cpu_decode(/*AUTOARG*/
    input [10:0]	     st__to_pop_5a;
    input [34:0]      st__to_push_5a;
 
+   input [10:0]      st__saved_sp_3a;
    input [2:0]	     c__to_push_3a;
    input [2:0] 	     c__to_push_4a;
    input [10:0]      st__to_pop_3a;
@@ -44,6 +46,7 @@ module cpu_decode(/*AUTOARG*/
 
    wire [7:0] 	     opcode;
    wire 	     mc__stall;
+   reg [10:0]        c__top_n_offset;
    
    /*AUTOWIRE*/
    // Beginning of automatic wires (for undeclared instantiated-module outputs)
@@ -70,6 +73,20 @@ module cpu_decode(/*AUTOARG*/
    assign c__branch_2a = mc__control_2a[16:15];
    assign c__r0_2a = mc__control_2a[17];
    assign c__r1_2a = mc__control_2a[18];
+   assign c__top_n_src = mc__control_2a[20:19];
+
+   always @(*) begin
+      case (c__top_n_src)
+        `UC_TOPN_1:
+          c__top_n_offset <= 1;
+        `UC_TOPN_IMM:
+	  c__top_n_offset <= instruction_1a[10:0];
+	`UC_TOPN_IMMREG:
+	  c__top_n_offset <= st__saved_sp_3a - instruction_1a[10:0];
+        default:
+          c__top_n_offset <= 11'bx; 
+      endcase 
+   end
 
    /// SEQUENTIAL LOGIC ///
 
@@ -106,10 +123,12 @@ module cpu_decode(/*AUTOARG*/
 		       .rst_b		(rst_b));
 
    lame_stack Stack(.st__top_0(st__top_0_2a),
-		    .st__top_1(st__top_1_2a),
+		    .st__top_n(st__top_n_2a),
 		    .st__push(st__push_5a),
+		    .st__sp(st__sp_2a),
 		    .st__to_pop(st__to_pop_5a),
 		    .st__to_push(st__to_push_5a),
+		    .st__top_n_offset	(c__top_n_offset[10:0]),
 		    /*AUTOINST*/
 		    // Inputs
 		    .clk		(clk),

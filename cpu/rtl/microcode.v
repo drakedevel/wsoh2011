@@ -12,7 +12,6 @@ module microcode(/*AUTOARG*/
 
    output [31:0] mc__control_2a;
    output 	 mc__more_2a;
-   output [31:0] micro_op;
    input 	 js_mode;
    input 	 kill_4a;
    input 	 mc__stall;
@@ -36,7 +35,7 @@ module microcode(/*AUTOARG*/
    assign next_micro_op_hack = microprogram[next_micro_pc];
    
    // Output
-   assign mc__control_2a = micro_op_hack;
+   assign mc__control_2a = killed ? 32'b0 : micro_op_hack;
 
    // Decode
    assign mc__more_2a = micro_op_hack[0];
@@ -52,8 +51,6 @@ module microcode(/*AUTOARG*/
    end
 
    /// SEQUENTIAL LOGIC ///
-
-   assign micro_op = killed ? 32'b0 : micro_op_hack;
 
    always @(posedge clk or negedge rst_b) begin
       if (!rst_b) begin

@@ -84,6 +84,29 @@ JSOP_NEG
 JSOP_VOID
 	{ 13'b0, `UC_R1_NOP, `UC_R0_NOP, `UC_BR_NONE, `UC_LEFT_IMM, `UC_RIGHT_IMM, `UC_PUSHIMM, `UC_POP(2'd1), `ALU_LEFT, `UC_DONE }
 
+JSOP_CALL
+	// Retrieve call address into r1 and push number of args
+	{ 11'b0, `UC_TOPN_IMM, `UC_R1_STORE, `UC_R0_NOP, `UC_BR_NONE, `UC_LEFT_IMM, `UC_RIGHT_IMM, `UC_PUSHALU, `UC_POP(2'd0), `ALU_LEFT, `UC_NEXT }
+	// Push return address
+	{ 13'b0, `UC_R1_NOP, `UC_R0_NOP, `UC_BR_NONE, `UC_LEFT_PC, `UC_RIGHT_IMM, `UC_PUSHALU, `UC_POP(2'd0), `ALU_LEFT, `UC_NEXT }
+	// Jump
+	{ 13'b0, `UC_R1_NOP, `UC_R0_NOP, `UC_BR_ALU, `UC_LEFT_IMM, `UC_RIGHT_R1, `UC_NOPUSH, `UC_POP(2'd0), `ALU_RIGHT, `UC_DONE }
+
+JSOP_RETURN
+	// Save return value in R0, and return address into reg
+	{ 13'b0, `UC_R1_NOP, `UC_R0_STORE, `UC_BR_ALU, `UC_LEFT_STK1, `UC_RIGHT_IMM, `UC_NOPUSH, `UC_POP(2'd2), `ALU_LEFT, `UC_NEXT }
+	// Now we still have nargs, which we have to pop - 2'd3 means 'take amt from ALU', which comes from stk0. Also,
+	// push back the return value, which we stored last time around in R0.
+	{ 13'b0, `UC_R1_NOP, `UC_R0_NOP, `UC_BR_NONE, `UC_LEFT_STK0, `UC_RIGHT_IMM, `UC_PUSHREG0, `UC_POP(2'd3), `ALU_LEFT, `UC_NEXT }
+
+JSOP_STOP
+	// Save return address into reg
+	{ 13'b0, `UC_R1_NOP, `UC_R0_NOP, `UC_BR_ALU, `UC_LEFT_STK0, `UC_RIGHT_IMM, `UC_NOPUSH, `UC_POP(2'd1), `ALU_LEFT, `UC_NEXT }
+	// Now we still have nargs, which we have to pop - 2'd3 means 'take amt from ALU', which comes from stk0. Also,
+	// push back a bullshit return value.
+	// XXX: the value in R0 is bogus. Push undefined properly, dammit.
+	{ 13'b0, `UC_R1_NOP, `UC_R0_NOP, `UC_BR_NONE, `UC_LEFT_STK0, `UC_RIGHT_IMM, `UC_PUSHREG0, `UC_POP(2'd3), `ALU_LEFT, `UC_NEXT }
+
 JSOP_POP
 	{ 13'b0, `UC_R1_NOP, `UC_R0_NOP, `UC_BR_NONE, `UC_LEFT_IMM, `UC_RIGHT_IMM, `UC_NOPUSH, `UC_POP(2'd1), `ALU_LEFT, `UC_DONE }
 
