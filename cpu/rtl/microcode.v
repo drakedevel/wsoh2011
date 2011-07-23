@@ -12,6 +12,7 @@ module microcode(/*AUTOARG*/
 
    output [31:0] mc__control_2a;
    output 	 mc__more_2a;
+   output [31:0] micro_op;
    input 	 js_mode;
    input 	 kill_4a;
    input 	 mc__stall;
@@ -22,23 +23,23 @@ module microcode(/*AUTOARG*/
 
    wire 	 killed;
    wire [10:0]	 microprogram_label_value;
-   wire [31:0] 	 next_micro_op;
+   wire [31:0] 	 next_micro_op_hack;
    reg [9:0] 	 next_micro_pc;
    reg 		 next_micro_valid;
-   reg [31:0] 	 micro_op;
+   reg [31:0] 	 micro_op_hack;
    reg [9:0] 	 micro_pc;
 
    /// COMBINATIONAL LOGIC ///
 
    assign killed = kill_4a;
    assign microprogram_label_value = microprogram_label[{ js_mode, opcode }];
-   assign next_micro_op = microprogram[next_micro_pc];
+   assign next_micro_op_hack = microprogram[next_micro_pc];
    
    // Output
-   assign mc__control_2a = micro_op;
+   assign mc__control_2a = micro_op_hack;
 
    // Decode
-   assign mc__more_2a = micro_op[0];
+   assign mc__more_2a = micro_op_hack[0];
 
    // Next PC
    always @* begin
@@ -52,20 +53,20 @@ module microcode(/*AUTOARG*/
 
    /// SEQUENTIAL LOGIC ///
 
+   assign micro_op = killed ? 32'b0 : micro_op_hack;
+
    always @(posedge clk or negedge rst_b) begin
       if (!rst_b) begin
 	 /*AUTORESET*/
 	 // Beginning of autoreset for uninitialized flops
-	 micro_op <= 32'h0;
+	 micro_op_hack <= 32'h0;
 	 micro_pc <= 10'h0;
 	 // End of automatics
       end else begin
-	 if (killed) begin
-	    micro_op[32:0] <= 32'b0;
-	 end else if (mc__stall) begin
-	    micro_op[31:1] <= 31'b0;
+	 if (mc__stall) begin
+	    micro_op_hack[31:1] <= 31'b0;
 	 end else begin
-	    micro_op <= next_micro_op;
+	    micro_op_hack <= next_micro_op_hack;
 	    micro_pc <= next_micro_pc;
 	 end
       end
