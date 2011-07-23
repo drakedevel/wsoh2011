@@ -53,7 +53,7 @@ module cpu_memory(/*AUTOARG*/
 	`UC_BR_REL, `UC_BR_REL_COND:
 	  branch_target_4a = pc_3a + { {16{instruction_3a[15]}}, instruction_3a[15:0] };
 	`UC_BR_ALU:
-	  branch_target_4a <= alu__out_3a;
+	  branch_target_4a = alu__out_3a;
 	default:
 	  branch_target_4a = 32'bx;
       endcase
