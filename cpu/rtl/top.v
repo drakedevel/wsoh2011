@@ -12,7 +12,6 @@ module top(/*AUTOARG*/
    // End of automatics
    wire [47:0] 		hatch_instruction;
    wire [10:0] 	st__saved_sp_3a;	// To CPU of cpu.v
-   reg [47:0] 		hatch_memory [0:63];
    
    output       Hsync;			// From CPU of cpu.v
    output 	Vsync;			// From CPU of cpu.v
@@ -23,10 +22,14 @@ module top(/*AUTOARG*/
    input 	clk;			// To CPU of cpu.v
    input 	rst_b;			// To CPU of cpu.v
    input [7:0] 	switches;		// To CPU of cpu.v
-   
-   initial $readmemh("jsops.hex", hatch_memory);
 
-   assign hatch_instruction = hatch_memory[hatch_address / 6];
+   reg [47:0] 	hatch_memory [0:191];
+   
+   initial begin
+      $readmemh("jsops.hex", hatch_memory);
+   end
+
+   assign hatch_instruction = hatch_memory[hatch_address / 2];
    
    cpu CPU(/*AUTOINST*/
 	   // Outputs
