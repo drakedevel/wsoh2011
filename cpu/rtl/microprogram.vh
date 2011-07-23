@@ -16,6 +16,7 @@ initial begin
     microprogram_label[{ 1'b1, `JSOP_NULL }] = { 1'b1, `UC_OFFSET_JSOP_NULL };
     microprogram_label[{ 1'b1, `JSOP_INT8 }] = { 1'b1, `UC_OFFSET_JSOP_INT8 };
     microprogram_label[{ 1'b1, `JSOP_INT32 }] = { 1'b1, `UC_OFFSET_JSOP_INT32 };
+    microprogram_label[{ 1'b1, `JSOP_UINT16 }] = { 1'b1, `UC_OFFSET_JSOP_UINT16 };
     microprogram_label[{ 1'b1, `JSOP_DUP }] = { 1'b1, `UC_OFFSET_JSOP_DUP };
     microprogram_label[{ 1'b1, `JSOP_DUP2 }] = { 1'b1, `UC_OFFSET_JSOP_DUP2 };
     microprogram_label[{ 1'b1, `JSOP_BITOR }] = { 1'b1, `UC_OFFSET_JSOP_BITOR };
