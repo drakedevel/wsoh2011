@@ -43,6 +43,7 @@ module cpu_execute(/*AUTOARG*/
 
    reg [31:0] 	     alu__left;
    reg [31:0] 	     alu__right;
+   wire 	     killed;
    
    /*AUTOWIRE*/
    // Beginning of automatic wires (for undeclared instantiated-module outputs)
@@ -51,6 +52,8 @@ module cpu_execute(/*AUTOARG*/
    // End of automatics
 
    /// COMBINATIONAL LOGIC ///
+
+   assign killed = kill_4a
 
    always @* begin
       case (c__alu_left_2a)
@@ -76,7 +79,6 @@ module cpu_execute(/*AUTOARG*/
    end
    
    /// SEQUENTIAL LOGIC ///
-   wire elanus = kill_4a;
 
    always @(posedge clk or negedge rst_b) begin
       if (!rst_b) begin
@@ -97,7 +99,7 @@ module cpu_execute(/*AUTOARG*/
 	 alu__cond_3a <= alu__cond;
 	 alu__out_3a <= alu__out;
 
-	 if (elanus) begin
+	 if (killed) begin
 	    st__to_pop_3a <= 11'h0;
 	    c__branch_3a <= 2'h0;
 	    c__to_push_3a <= 3'h0;
@@ -110,11 +112,11 @@ module cpu_execute(/*AUTOARG*/
 	 instruction_3a <= instruction_2a;
 	 pc_3a <= pc_2a;
              
-         if (c__r0_2a && !elanus) begin
+         if (c__r0_2a && !killed) begin
             r0_3a <= st__top_0_2a;
          end
 
-         if (c__r1_2a && !elanus) begin
+         if (c__r1_2a && !killed) begin
             r1_3a <= st__top_1_2a;
          end
       end
