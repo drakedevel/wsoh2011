@@ -77,9 +77,16 @@ static void ProcessFunction(FunctionInfo &fun, JSScript *s)
                 break;
             }
             break;
-        case JOF_JUMP: 
-            errx(2, "Jump op");
+        case JOF_JUMP: {
+            int16_t new_target = 0;
+            jsbytecode* target = pc + (*((int16_t*)(pc + 1)));
+            if (target > pc)
+                for (jsbytecode *i = pc; i < target; i += js_CodeSpec[*i].length, new_target++);
+            else
+                for (jsbytecode *i = target; i < pc; i += js_CodeSpec[*i].length, new_target--);
+            printf("000000%04hx\n", new_target);
             break;
+        }
         case JOF_ATOM:
             errx(2, "Atoms are not supported.");
             break;
@@ -87,7 +94,7 @@ static void ProcessFunction(FunctionInfo &fun, JSScript *s)
             printf("01%08x\n", (int)(*(signed char *)(pc + 1)));
             break;
         case JOF_UINT16:
-            errx(2, "16-bit immediates are not supported.");
+            printf("010000%04x\n", *(unsigned uint16_t *)(pc + 1));
             break;
         case JOF_QARG:
             errx(2, "Argument op");
