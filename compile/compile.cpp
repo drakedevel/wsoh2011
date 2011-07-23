@@ -96,9 +96,16 @@ static void EmitFunction(JSContext *cx, FunctionInfo &fun)
                 break;
             }
             break;
-        case JOF_JUMP: 
-            errx(2, "Jump op");
+        case JOF_JUMP: {
+            int16_t new_target = 0;
+            jsbytecode* target = pc + GET_JUMP_OFFSET(pc);
+            if (target > pc)
+                for (jsbytecode *i = pc; i < target; i += js_CodeSpec[*i].length, new_target++);
+            else
+                for (jsbytecode *i = target; i < pc; i += js_CodeSpec[*i].length, new_target--);
+            printf("000000%04hx\n", new_target);
             break;
+        }
         case JOF_ATOM: {
             JSAtom *atom;
             GET_ATOM_FROM_BYTECODE(s, pc, 0, atom);
@@ -110,19 +117,19 @@ static void EmitFunction(JSContext *cx, FunctionInfo &fun)
                 }
             }
             if (!found)
-                errx(2, "Unknown atom");
+                errx(2, "Unknown (or non-function atom");
 
             printf("00%08d\n", found - functions.begin());
             break;
         }
         case JOF_INT8:
-            printf("01%08x\n", (int)(*(signed char *)(pc + 1)));
+            printf("01%08x\n", GET_INT8(pc));
             break;
         case JOF_UINT16:
-            errx(2, "16-bit immediates are not supported.");
+            printf("010000%04x\n", GET_UINT16(pc));
             break;
         case JOF_QARG:
-            errx(2, "Argument op");
+            printf("000000%04x\n", GET_ARGNO(pc));
             break;
         case JOF_OBJECT:
             errx(2, "Objects are not supported.");

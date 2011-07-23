@@ -4,14 +4,14 @@
 
 module microcode(/*AUTOARG*/
    // Outputs
-   mc__control, mc__more,
+   mc__control_2a, mc__more_2a,
    // Inputs
    js_mode, mc__stall, opcode, clk, rst_b
    );
 `include "microprogram.vh"
 
-   output [31:0] mc__control;
-   output 	 mc__more;
+   output [31:0] mc__control_2a;
+   output 	 mc__more_2a;
    input 	 js_mode;
    input 	 mc__stall;
    input [7:0] 	 opcode;
@@ -32,14 +32,14 @@ module microcode(/*AUTOARG*/
    assign next_micro_op = microprogram[next_micro_pc];
    
    // Output
-   assign mc__control = micro_op;
+   assign mc__control_2a = micro_op;
 
    // Decode
-   assign mc__more = micro_op[0];
+   assign mc__more_2a = micro_op[0];
 
    // Next PC
    always @* begin
-      if (mc__more) begin
+      if (mc__more_2a) begin
 	 next_micro_valid = 1'b1;
 	 next_micro_pc = micro_pc + 1;
       end else begin
