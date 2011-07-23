@@ -2,28 +2,21 @@ module vga_pipeline(/*AUTOARG*/
    // Outputs
    vg__color,
    // Inputs
-   clk, rst_b, st__conf_color, st__conf_enabled, st__conf_rect_x1,
-   st__conf_rect_x2, st__conf_rect_y1, st__conf_rect_y2,
-   vg__rect_index, vg__rect_write, vg__stall
+   clk, rst_b, st__data, vg__addr, vg__rect_write, vg__stall
    );
    parameter WIDTH = 800;
    parameter HEIGHT = 600;
    parameter WIDTHBITS = 10;
    parameter HEIGHTBITS = 10;
    parameter COLORBITS = 8;
-   parameter RECTBITS = 5;
+   parameter RECTBITS = 6;
    
    /// INTERFACE ///
    
    output [COLORBITS-1:0] vg__color;
    input 		  clk, rst_b;
-   input [COLORBITS-1:0]  st__conf_color;
-   input 		  st__conf_enabled;
-   input [WIDTHBITS-1:0]  st__conf_rect_x1;
-   input [WIDTHBITS-1:0]  st__conf_rect_x2;
-   input [HEIGHTBITS-1:0] st__conf_rect_y1;
-   input [HEIGHTBITS-1:0] st__conf_rect_y2;
-   input [RECTBITS-1:0]   vg__rect_index;
+   input [31:0]           st__data;
+   input [RECTBITS:0]     vg__addr;
    input 		  vg__rect_write;
    input 		  vg__stall;
 
@@ -70,7 +63,8 @@ module vga_pipeline(/*AUTOARG*/
    /// MODULE INSTANCES ///
    
    vga_stage_rectangle #(WIDTHBITS,HEIGHTBITS,COLORBITS,RECTBITS)
-   RectangleStage(.st__conf_multi_index(vg__rect_index),
+   RectangleStage(.st__conf_multi_index(vg__addr[RECTBITS:1]),
+		  .st__a0		(vg__addr[0]),
 		  .st__color_0a(color[0]),
 		  .st__color_1a(color[1]),
 		  .st__x_0a(x[0]),
@@ -81,12 +75,7 @@ module vga_pipeline(/*AUTOARG*/
 		  // Inputs
 		  .clk			(clk),
 		  .rst_b		(rst_b),
-		  .st__conf_enabled	(st__conf_enabled),
-		  .st__conf_color	(st__conf_color[COLORBITS-1:0]),
-		  .st__conf_rect_x1	(st__conf_rect_x1[WIDTHBITS-1:0]),
-		  .st__conf_rect_y1	(st__conf_rect_y1[HEIGHTBITS-1:0]),
-		  .st__conf_rect_x2	(st__conf_rect_x2[WIDTHBITS-1:0]),
-		  .st__conf_rect_y2	(st__conf_rect_y2[HEIGHTBITS-1:0]),
+		  .st__data		(st__data[31:0]),
 		  .vg__rect_write	(vg__rect_write),
 		  .vg__stall		(vg__stall));
 

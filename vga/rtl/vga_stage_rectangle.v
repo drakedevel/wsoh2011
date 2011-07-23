@@ -3,10 +3,17 @@ module vga_stage_rectangle(/*AUTOARG*/
    st__color_1a, st__x_1a, st__y_1a,
    // Inputs
    clk, rst_b, st__color_0a, st__x_0a, st__y_0a, st__conf_multi_index,
-   st__conf_enabled, st__conf_color, st__conf_rect_x1,
-   st__conf_rect_y1, st__conf_rect_x2, st__conf_rect_y2,
-   vg__rect_write, vg__stall
+   st__a0, st__data, vg__rect_write, vg__stall
    );
+
+   /*
+    * R0[9:0]	x1
+    * R0[19:10] y1
+    * R0[27:20] color
+    * R0[28]    enabled
+    * R1[9:0]   x2
+    * R1[19:10] y2
+    */
 
    parameter WIDTHBITS = 10;
    parameter HEIGHTBITS = 10;
@@ -22,12 +29,8 @@ module vga_stage_rectangle(/*AUTOARG*/
    input [WIDTHBITS-1:0]       st__x_0a;
    input [HEIGHTBITS-1:0]      st__y_0a;
    input [MULTIBITS-1:0]       st__conf_multi_index;
-   input 		       st__conf_enabled;
-   input [COLORBITS-1:0]       st__conf_color;
-   input [WIDTHBITS-1:0]       st__conf_rect_x1;
-   input [HEIGHTBITS-1:0]      st__conf_rect_y1;
-   input [WIDTHBITS-1:0]       st__conf_rect_x2;
-   input [HEIGHTBITS-1:0]      st__conf_rect_y2;
+   input                       st__a0;
+   input [31:0]                st__data;
    input 		       vg__rect_write;
    input 		       vg__stall;
 
@@ -45,6 +48,7 @@ module vga_stage_rectangle(/*AUTOARG*/
       if (!rst_b) begin
 	 /*AUTORESET*/
 	 // Beginning of autoreset for uninitialized flops
+	 st__color_1a <= {COLORBITS{1'b0}};
 	 st__x_1a <= {WIDTHBITS{1'b0}};
 	 st__y_1a <= {HEIGHTBITS{1'b0}};
 	 // End of automatics
@@ -72,12 +76,15 @@ module vga_stage_rectangle(/*AUTOARG*/
 	       enabled[i] <= 1'h0;
 	    end else begin
 	       if (vg__rect_write && st__conf_multi_index == i) begin
-		  enabled[i] <= st__conf_enabled;
-		  color[i] <= st__conf_color;
-		  rect_x1[i] <= st__conf_rect_x1;
-		  rect_x2[i] <= st__conf_rect_x2;
-		  rect_y1[i] <= st__conf_rect_y1;
-		  rect_y2[i] <= st__conf_rect_y2;
+                  if (st__a0 == 1'b0) begin
+		     rect_x1[i] <= st__data[9:0];
+		     rect_y1[i] <= st__data[19:10];
+		     color[i] <= st__data[27:20];
+		     enabled[i] <= st__data[28];
+                  end else begin
+		     rect_x2[i] <= st__data[9:0];
+		     rect_y2[i] <= st__data[19:10];
+                  end
 	       end
 	    end
 	 end

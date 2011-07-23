@@ -13,10 +13,12 @@ module top(/*AUTOARG*/
    parameter RECTBITS = 6;
 
    localparam
-     STATE_TL_START = 2'd0,
-     STATE_TL_WAIT = 2'd1,
-     STATE_BR_START = 2'd2,
-     STATE_BR_WAIT = 2'd3;
+     STATE_TL_A0 = 3'd0,
+     STATE_TL_A1 = 3'd1,
+     STATE_TL_WAIT = 3'd2,
+     STATE_BR_A0 = 3'd3,
+     STATE_BR_A1 = 3'd4,
+     STATE_BR_WAIT = 3'd5;
    
    /// INTERFACE ///
 
@@ -37,13 +39,8 @@ module top(/*AUTOARG*/
    reg [1:0] 		state;
    reg 			rst_b = 1'b0;
 
-   reg [COLORBITS-1:0] 	st__conf_color;
-   reg 			st__conf_enabled;
-   reg [WIDTHBITS-1:0] 	st__conf_rect_x1;
-   reg [WIDTHBITS-1:0] 	st__conf_rect_x2;
-   reg [HEIGHTBITS-1:0] st__conf_rect_y1;
-   reg [HEIGHTBITS-1:0] st__conf_rect_y2;
-   reg [RECTBITS-1:0] 	vg__rect_index;
+   reg [31:0]           st__data;
+   reg [RECTBITS:0] 	vg__addr;
    reg 			vg__rect_write;
    
    /*AUTOWIRE*/
@@ -67,50 +64,51 @@ module top(/*AUTOARG*/
 	 /*AUTORESET*/
 	 // Beginning of autoreset for uninitialized flops
 	 counter <= 27'h0;
-	 st__conf_color <= {COLORBITS{1'b0}};
-	 st__conf_enabled <= 1'h0;
-	 st__conf_rect_x1 <= {WIDTHBITS{1'b0}};
-	 st__conf_rect_x2 <= {WIDTHBITS{1'b0}};
-	 st__conf_rect_y1 <= {HEIGHTBITS{1'b0}};
-	 st__conf_rect_y2 <= {HEIGHTBITS{1'b0}};
-	 state <= 2'h0;
-	 vg__rect_index <= {RECTBITS{1'b0}};
+	 st__data <= 32'b0;
+	 state <= 3'h0;
+	 vg__addr <= {(RECTBITS+1){1'b0}};
 	 vg__rect_write <= 1'h0;
 	 // End of automatics
       end else begin
 	 counter <= counter + 1;
 	 case (state)
-	   STATE_TL_START: begin
+	   STATE_TL_A0: begin
+	      state <= STATE_TL_A1;
+                        // padding, enable, color, y1, x1
+              st__data <= { 3'h0, 1'b1, 8'b11100000, 10'd0, 10'd0 };
+	      vg__addr <= 7'd0;
+	      vg__rect_write <= 1'b1;
+	   end
+           STATE_TL_A1: begin
 	      state <= STATE_TL_WAIT;
-	      st__conf_enabled <= 1'b1;
-	      st__conf_color <= 8'b11100000;
-	      st__conf_rect_x1 <= 10'd0;
-	      st__conf_rect_x2 <= 10'd399;
-	      st__conf_rect_y1 <= 10'd0;
-	      st__conf_rect_y2 <= 10'd299;
-	      vg__rect_index <= 6'b0;
+                        // padding, y2, x2
+              st__data <= { 12'h000, 10'd299, 10'd399 };
+	      vg__addr <= 7'd1;
 	      vg__rect_write <= 1'b1;
 	   end
 	   STATE_TL_WAIT: begin
 	      vg__rect_write <= 1'b0;	      
 	      if (counter == 27'b0)
-		state <= STATE_BR_START;
+		state <= STATE_BR_A0;
 	   end
-	   STATE_BR_START: begin
+	   STATE_BR_A0: begin
+	      state <= STATE_BR_A1;
+                        // padding, enable, color, y1, x1
+              st__data <= { 3'h0, 1'b1, 8'b00000011, 10'd300, 10'd400 };
+	      vg__addr <= 7'd2;
+	      vg__rect_write <= 1'b1;
+	   end
+           STATE_BR_A1: begin
 	      state <= STATE_BR_WAIT;
-	      st__conf_enabled <= 1'b1;
-	      st__conf_color <= 8'b00000011;
-	      st__conf_rect_x1 <= 10'd400;
-	      st__conf_rect_x2 <= 10'd799;
-	      st__conf_rect_y1 <= 10'd300;
-	      st__conf_rect_y2 <= 10'd599;
-	      vg__rect_index <= 6'b0;
+                        // padding, y2, x2
+              st__data <= { 12'h000, 10'd599, 10'd799 };
+	      vg__addr <= 7'd3;
 	      vg__rect_write <= 1'b1;
 	   end
 	   STATE_BR_WAIT: begin
 	      vg__rect_write <= 1'b0;
 	      if (counter == 27'b0)
-		state <= STATE_TL_START;
+		state <= STATE_TL_A0;
 	   end
 	 endcase
       end
@@ -138,13 +136,8 @@ module top(/*AUTOARG*/
 	 // Inputs
 	 .clk				(clk),
 	 .rst_b				(rst_b),
-	 .st__conf_color		(st__conf_color[COLORBITS-1:0]),
-	 .st__conf_enabled		(st__conf_enabled),
-	 .st__conf_rect_x1		(st__conf_rect_x1[WIDTHBITS-1:0]),
-	 .st__conf_rect_x2		(st__conf_rect_x2[WIDTHBITS-1:0]),
-	 .st__conf_rect_y1		(st__conf_rect_y1[HEIGHTBITS-1:0]),
-	 .st__conf_rect_y2		(st__conf_rect_y2[HEIGHTBITS-1:0]),
-	 .vg__rect_index		(vg__rect_index[RECTBITS-1:0]),
+	 .st__data			(st__data[31:0]),
+	 .vg__addr			(vg__addr[RECTBITS:0]),
 	 .vg__rect_write		(vg__rect_write),
 	 .vg__stall			(vg__stall));
 endmodule
