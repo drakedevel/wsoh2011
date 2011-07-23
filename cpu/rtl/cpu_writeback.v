@@ -2,14 +2,13 @@
 
 module cpu_writeback(/*AUTOARG*/
    // Outputs
-   st__pop_5a, st__push_5a, st__to_pop_5a, st__to_push_5a,
+   st__push_5a, st__to_pop_5a, st__to_push_5a,
    // Inputs
    pc_4a, c__to_push_4a, st__to_pop_4a, st__to_push_4a, clk, rst_b
    );
 
    /// PIPELINE INTERFACE ///
    
-   output 	 st__pop_5a;
    output 	 st__push_5a;
    output [10:0] st__to_pop_5a;
    output [34:0] st__to_push_5a;
@@ -24,7 +23,6 @@ module cpu_writeback(/*AUTOARG*/
 
    /// COMBINATIONAL LOGIC ///
 
-   assign st__pop_5a = (st__to_pop_4a != 11'b0);
    assign st__to_pop_5a = st__to_pop_4a;
    
    assign st__push_5a = (c__to_push_4a != `UC_NOPUSH);

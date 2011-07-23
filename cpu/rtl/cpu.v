@@ -41,7 +41,6 @@ module cpu(/*AUTOARG*/
    wire [31:0]		pc_2a;			// From Decode of cpu_decode.v
    wire [31:0]		pc_3a;			// From Execute of cpu_execute.v
    wire [31:0]		pc_4a;			// From Memory of cpu_memory.v
-   wire			st__pop_5a;		// From Writeback of cpu_writeback.v
    wire			st__push_5a;		// From Writeback of cpu_writeback.v
    wire [10:0]		st__to_pop_2a;		// From Decode of cpu_decode.v
    wire [10:0]		st__to_pop_3a;		// From Execute of cpu_execute.v
@@ -86,7 +85,6 @@ module cpu(/*AUTOARG*/
 		     .instruction_1a	(instruction_1a[47:0]),
 		     .kill_4a		(kill_4a),
 		     .pc_1a		(pc_1a[31:0]),
-		     .st__pop_5a	(st__pop_5a),
 		     .st__push_5a	(st__push_5a),
 		     .st__to_pop_5a	(st__to_pop_5a[10:0]),
 		     .st__to_push_5a	(st__to_push_5a[34:0]),
@@ -142,7 +140,6 @@ module cpu(/*AUTOARG*/
 
    cpu_writeback Writeback(/*AUTOINST*/
 			   // Outputs
-			   .st__pop_5a		(st__pop_5a),
 			   .st__push_5a		(st__push_5a),
 			   .st__to_pop_5a	(st__to_pop_5a[10:0]),
 			   .st__to_push_5a	(st__to_push_5a[34:0]),
@@ -165,6 +162,8 @@ module cpu(/*AUTOARG*/
 		   .stall_2a		(stall_2a),
 		   .st__push_5a		(st__push_5a),
 		   .st__to_push_5a	(st__to_push_5a[34:0]),
+		   .st__top_0_2a	(st__top_0_2a[34:0]),
+		   .st__top_1_2a	(st__top_1_2a[34:0]),
 		   .clk			(clk),
 		   .rst_b		(rst_b));
    // synthesis translate_on

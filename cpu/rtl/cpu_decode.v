@@ -4,9 +4,9 @@ module cpu_decode(/*AUTOARG*/
    c__to_push_2a, instruction_2a, pc_2a, stall_2a, st__top_0_2a,
    st__top_1_2a, st__to_pop_2a,
    // Inputs
-   instruction_1a, kill_4a, pc_1a, st__pop_5a, st__push_5a,
-   st__to_pop_5a, st__to_push_5a, c__to_push_3a, c__to_push_4a,
-   st__to_pop_3a, st__to_pop_4a, clk, rst_b
+   instruction_1a, kill_4a, pc_1a, st__push_5a, st__to_pop_5a,
+   st__to_push_5a, c__to_push_3a, c__to_push_4a, st__to_pop_3a,
+   st__to_pop_4a, clk, rst_b
    );
 
    /// PIPELINE INTERFACE ///
@@ -25,7 +25,6 @@ module cpu_decode(/*AUTOARG*/
    input [47:0]      instruction_1a;
    input 	     kill_4a;
    input [31:0]      pc_1a;
-   input 	     st__pop_5a;
    input 	     st__push_5a;
    input [10:0]	     st__to_pop_5a;
    input [34:0]      st__to_push_5a;
@@ -55,7 +54,7 @@ module cpu_decode(/*AUTOARG*/
    assign mc__stall = c__to_push_2a || st__to_pop_2a ||
 		      c__to_push_3a || st__to_pop_3a ||
 		      c__to_push_4a || st__to_pop_4a ||
-		      st__push_5a || st__pop_5a;
+		      st__push_5a || st__to_pop_5a;
    assign stall_2a = mc__more || mc__stall;
 
    assign js_mode = pc_1a[0];
@@ -103,7 +102,6 @@ module cpu_decode(/*AUTOARG*/
 
    lame_stack Stack(.st__top_0(st__top_0_2a),
 		    .st__top_1(st__top_1_2a),
-		    .st__pop(st__pop_5a),
 		    .st__push(st__push_5a),
 		    .st__to_pop(st__to_pop_5a),
 		    .st__to_push(st__to_push_5a),
