@@ -1,17 +1,25 @@
 module cpu(/*AUTOARG*/
    // Outputs
-   st__sp_2a, st__saved_pc_3a, hatch_address,
+   vgaRed, vgaGreen, vgaBlue, st__sp_2a, st__saved_pc_3a, leds,
+   hatch_address, Vsync, Hsync,
    // Inputs
-   st__saved_sp_3a, st__saved_pc_2a, rst_b, hatch_instruction, clk
+   switches, st__saved_sp_3a, st__saved_pc_2a, rst_b,
+   hatch_instruction, clk
    );
 
    /// WORLD INTERFACE ///
 
    /*AUTOOUTPUT*/
    // Beginning of automatic outputs (from unused autoinst outputs)
+   output		Hsync;			// From Memory of cpu_memory.v
+   output		Vsync;			// From Memory of cpu_memory.v
    output [31:0]	hatch_address;		// From Fetch of cpu_fetch.v
+   output [7:0]		leds;			// From Memory of cpu_memory.v
    output [10:0]	st__saved_pc_3a;	// From Execute of cpu_execute.v
    output [10:0]	st__sp_2a;		// From Decode of cpu_decode.v
+   output [2:3]		vgaBlue;		// From Memory of cpu_memory.v
+   output [1:3]		vgaGreen;		// From Memory of cpu_memory.v
+   output [1:3]		vgaRed;			// From Memory of cpu_memory.v
    // End of automatics
    /*AUTOINPUT*/
    // Beginning of automatic inputs (from unused autoinst inputs)
@@ -20,6 +28,7 @@ module cpu(/*AUTOARG*/
    input		rst_b;			// To Fetch of cpu_fetch.v, ...
    input [10:0]		st__saved_pc_2a;	// To Execute of cpu_execute.v
    input [10:0]		st__saved_sp_3a;	// To Decode of cpu_decode.v
+   input [7:0]		switches;		// To Memory of cpu_memory.v
    // End of automatics
 
    /// INTERNAL SIGNALS ///
@@ -146,6 +155,12 @@ module cpu(/*AUTOARG*/
 		     .pc_4a		(pc_4a[31:0]),
 		     .st__to_pop_4a	(st__to_pop_4a[10:0]),
 		     .st__to_push_4a	(st__to_push_4a[34:0]),
+		     .Hsync		(Hsync),
+		     .Vsync		(Vsync),
+		     .leds		(leds[7:0]),
+		     .vgaBlue		(vgaBlue[2:3]),
+		     .vgaGreen		(vgaGreen[1:3]),
+		     .vgaRed		(vgaRed[1:3]),
 		     // Inputs
 		     .alu__cond_3a	(alu__cond_3a),
 		     .alu__out_3a	(alu__out_3a[31:0]),
@@ -157,7 +172,8 @@ module cpu(/*AUTOARG*/
 		     .r1_3a		(r1_3a[34:0]),
 		     .st__to_pop_3a	(st__to_pop_3a[10:0]),
 		     .clk		(clk),
-		     .rst_b		(rst_b));
+		     .rst_b		(rst_b),
+		     .switches		(switches[7:0]));
 
    cpu_writeback Writeback(/*AUTOINST*/
 			   // Outputs

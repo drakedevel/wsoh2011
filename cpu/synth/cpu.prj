@@ -7,8 +7,15 @@ verilog work ../rtl/cpu_decode.v
 verilog work ../rtl/alu.v
 verilog work ../rtl/cpu_execute.v
 
+verilog work ../../vga/rtl/vga_core.v
+verilog work ../../vga/rtl/vga_pipeline.v
+verilog work ../../vga/rtl/vga_stage_rectangle.v
+verilog work ../../vga/rtl/vga_unit.v
+verilog work ../rtl/iobus.v
 verilog work ../rtl/cpu_memory.v
 
 verilog work ../rtl/cpu_writeback.v
 
 verilog work ../rtl/cpu.v
+
+verilog work ../rtl/top.v
