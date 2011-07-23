@@ -30,9 +30,11 @@ module cpu(/*AUTOARG*/
    wire [1:0]		c__alu_right_2a;	// From Decode of cpu_decode.v
    wire [1:0]		c__branch_2a;		// From Decode of cpu_decode.v
    wire [1:0]		c__branch_3a;		// From Execute of cpu_execute.v
-   wire [1:0]		c__to_push_2a;		// From Decode of cpu_decode.v
-   wire [1:0]		c__to_push_3a;		// From Execute of cpu_execute.v
-   wire [1:0]		c__to_push_4a;		// From Memory of cpu_memory.v
+   wire			c__r0_2a;		// From Decode of cpu_decode.v
+   wire			c__r1_2a;		// From Decode of cpu_decode.v
+   wire [2:0]		c__to_push_2a;		// From Decode of cpu_decode.v
+   wire [2:0]		c__to_push_3a;		// From Execute of cpu_execute.v
+   wire [2:0]		c__to_push_4a;		// From Memory of cpu_memory.v
    wire [47:0]		instruction_1a;		// From Fetch of cpu_fetch.v
    wire [47:0]		instruction_2a;		// From Decode of cpu_decode.v
    wire [47:0]		instruction_3a;		// From Execute of cpu_execute.v
@@ -41,6 +43,8 @@ module cpu(/*AUTOARG*/
    wire [31:0]		pc_2a;			// From Decode of cpu_decode.v
    wire [31:0]		pc_3a;			// From Execute of cpu_execute.v
    wire [31:0]		pc_4a;			// From Memory of cpu_memory.v
+   wire [34:0]		r0_3a;			// From Execute of cpu_execute.v
+   wire [34:0]		r1_3a;			// From Execute of cpu_execute.v
    wire			st__push_5a;		// From Writeback of cpu_writeback.v
    wire [10:0]		st__to_pop_2a;		// From Decode of cpu_decode.v
    wire [10:0]		st__to_pop_3a;		// From Execute of cpu_execute.v
@@ -74,7 +78,9 @@ module cpu(/*AUTOARG*/
 		     .c__alu_left_2a	(c__alu_left_2a[1:0]),
 		     .c__alu_right_2a	(c__alu_right_2a[1:0]),
 		     .c__branch_2a	(c__branch_2a[1:0]),
-		     .c__to_push_2a	(c__to_push_2a[1:0]),
+		     .c__to_push_2a	(c__to_push_2a[2:0]),
+		     .c__r0_2a		(c__r0_2a),
+		     .c__r1_2a		(c__r1_2a),
 		     .instruction_2a	(instruction_2a[47:0]),
 		     .pc_2a		(pc_2a[31:0]),
 		     .stall_2a		(stall_2a),
@@ -88,8 +94,8 @@ module cpu(/*AUTOARG*/
 		     .st__push_5a	(st__push_5a),
 		     .st__to_pop_5a	(st__to_pop_5a[10:0]),
 		     .st__to_push_5a	(st__to_push_5a[34:0]),
-		     .c__to_push_3a	(c__to_push_3a[1:0]),
-		     .c__to_push_4a	(c__to_push_4a[1:0]),
+		     .c__to_push_3a	(c__to_push_3a[2:0]),
+		     .c__to_push_4a	(c__to_push_4a[2:0]),
 		     .st__to_pop_3a	(st__to_pop_3a[10:0]),
 		     .st__to_pop_4a	(st__to_pop_4a[10:0]),
 		     .clk		(clk),
@@ -100,16 +106,20 @@ module cpu(/*AUTOARG*/
 		       .alu__cond_3a	(alu__cond_3a),
 		       .alu__out_3a	(alu__out_3a[31:0]),
 		       .c__branch_3a	(c__branch_3a[1:0]),
-		       .c__to_push_3a	(c__to_push_3a[1:0]),
+		       .c__to_push_3a	(c__to_push_3a[2:0]),
 		       .instruction_3a	(instruction_3a[47:0]),
 		       .pc_3a		(pc_3a[31:0]),
+		       .r0_3a		(r0_3a[34:0]),
+		       .r1_3a		(r1_3a[34:0]),
 		       .st__to_pop_3a	(st__to_pop_3a[10:0]),
 		       // Inputs
 		       .alu__op_2a	(alu__op_2a[4:0]),
 		       .c__alu_left_2a	(c__alu_left_2a[1:0]),
 		       .c__alu_right_2a	(c__alu_right_2a[1:0]),
 		       .c__branch_2a	(c__branch_2a[1:0]),
-		       .c__to_push_2a	(c__to_push_2a[1:0]),
+		       .c__to_push_2a	(c__to_push_2a[2:0]),
+		       .c__r0_2a	(c__r0_2a),
+		       .c__r1_2a	(c__r1_2a),
 		       .instruction_2a	(instruction_2a[47:0]),
 		       .kill_4a		(kill_4a),
 		       .pc_2a		(pc_2a[31:0]),
@@ -122,7 +132,7 @@ module cpu(/*AUTOARG*/
    cpu_memory Memory(/*AUTOINST*/
 		     // Outputs
 		     .branch_target_4a	(branch_target_4a[31:0]),
-		     .c__to_push_4a	(c__to_push_4a[1:0]),
+		     .c__to_push_4a	(c__to_push_4a[2:0]),
 		     .kill_4a		(kill_4a),
 		     .pc_4a		(pc_4a[31:0]),
 		     .st__to_pop_4a	(st__to_pop_4a[10:0]),
@@ -131,9 +141,11 @@ module cpu(/*AUTOARG*/
 		     .alu__cond_3a	(alu__cond_3a),
 		     .alu__out_3a	(alu__out_3a[31:0]),
 		     .c__branch_3a	(c__branch_3a[1:0]),
-		     .c__to_push_3a	(c__to_push_3a[1:0]),
+		     .c__to_push_3a	(c__to_push_3a[2:0]),
 		     .instruction_3a	(instruction_3a[47:0]),
 		     .pc_3a		(pc_3a[31:0]),
+		     .r0_3a		(r0_3a[34:0]),
+		     .r1_3a		(r1_3a[34:0]),
 		     .st__to_pop_3a	(st__to_pop_3a[10:0]),
 		     .clk		(clk),
 		     .rst_b		(rst_b));
@@ -145,7 +157,7 @@ module cpu(/*AUTOARG*/
 			   .st__to_push_5a	(st__to_push_5a[34:0]),
 			   // Inputs
 			   .pc_4a		(pc_4a[31:0]),
-			   .c__to_push_4a	(c__to_push_4a[1:0]),
+			   .c__to_push_4a	(c__to_push_4a[2:0]),
 			   .st__to_pop_4a	(st__to_pop_4a[10:0]),
 			   .st__to_push_4a	(st__to_push_4a[34:0]),
 			   .clk			(clk),

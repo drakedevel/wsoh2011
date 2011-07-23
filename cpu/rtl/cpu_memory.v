@@ -6,13 +6,13 @@ module cpu_memory(/*AUTOARG*/
    st__to_push_4a,
    // Inputs
    alu__cond_3a, alu__out_3a, c__branch_3a, c__to_push_3a,
-   instruction_3a, pc_3a, st__to_pop_3a, clk, rst_b
+   instruction_3a, pc_3a, r0_3a, r1_3a, st__to_pop_3a, clk, rst_b
    );
 
    /// PIPELINE INTERFACE ///
 
    output reg [31:0] branch_target_4a;
-   output reg [1:0]  c__to_push_4a;
+   output reg [2:0]  c__to_push_4a;
    output reg 	     kill_4a;
    output reg [31:0] pc_4a;
    output reg [10:0] st__to_pop_4a;
@@ -20,9 +20,11 @@ module cpu_memory(/*AUTOARG*/
    input 	     alu__cond_3a;
    input [31:0]      alu__out_3a;
    input [1:0] 	     c__branch_3a;
-   input [1:0] 	     c__to_push_3a;
+   input [2:0] 	     c__to_push_3a;
    input [47:0]      instruction_3a;
    input [31:0]      pc_3a;
+   input [34:0]      r0_3a;
+   input [34:0]      r1_3a;
    input [10:0]      st__to_pop_3a;
 
    /// WORLD INTERFACE ///
@@ -36,7 +38,7 @@ module cpu_memory(/*AUTOARG*/
 	 /*AUTORESET*/
 	 // Beginning of autoreset for uninitialized flops
 	 branch_target_4a <= 32'h0;
-	 c__to_push_4a <= 2'h0;
+	 c__to_push_4a <= 3'h0;
 	 kill_4a <= 1'h0;
 	 pc_4a <= 32'h0;
 	 st__to_pop_4a <= 11'h0;
@@ -52,6 +54,10 @@ module cpu_memory(/*AUTOARG*/
 	     st__to_push_4a <= { `TYPE_INTEGER, alu__out_3a };
 	   `UC_PUSHIMM:
 	     st__to_push_4a <= instruction_3a[34:0];
+	   `UC_PUSHREG0:
+	     st__to_push_4a <= r0_3a;
+	   `UC_PUSHREG1:
+	     st__to_push_4a <= r1_3a;
 	   default:
 	     st__to_push_4a <= 35'bx;
 	 endcase

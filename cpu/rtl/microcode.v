@@ -58,7 +58,7 @@ module microcode(/*AUTOARG*/
 	 // End of automatics
       end else begin
 	 if (mc__stall) begin
-	    micro_op <= 16'b0;
+	    micro_op[31:1] <= 31'b0;
 	 end else begin
 	    micro_op <= next_micro_op;
 	    micro_pc <= next_micro_pc;
