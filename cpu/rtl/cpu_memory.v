@@ -34,15 +34,6 @@ module cpu_memory(/*AUTOARG*/
    /// INTERNAL SIGNALS ///
 
    /*AUTOWIRE*/
-   // Beginning of automatic wires (for undeclared instantiated-module outputs)
-   wire			Hsync;			// From IO of iobus.v
-   wire			Vsync;			// From IO of iobus.v
-   wire [31:0]		bus__rddata_4a;		// From IO of iobus.v
-   wire [7:0]		leds;			// From IO of iobus.v
-   wire [2:3]		vgaBlue;		// From IO of iobus.v
-   wire [1:3]		vgaGreen;		// From IO of iobus.v
-   wire [1:3]		vgaRed;			// From IO of iobus.v
-   // End of automatics
    
    /// SEQUENTIAL LOGIC ///
 
@@ -72,9 +63,7 @@ module cpu_memory(/*AUTOARG*/
       if (!rst_b) begin
 	 /*AUTORESET*/
 	 // Beginning of autoreset for uninitialized flops
-	 branch_target_4a <= 32'h0;
 	 c__to_push_4a <= 3'h0;
-	 kill_4a <= 1'h0;
 	 pc_4a <= 32'h0;
 	 st__to_pop_4a <= 11'h0;
 	 st__to_push_4a <= 35'h0;
