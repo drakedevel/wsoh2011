@@ -22,6 +22,7 @@ module top(/*AUTOARG*/
    output [1:3] vgaRed;			// From CPU of cpu.v
    input 	clk;			// To CPU of cpu.v
    input 	rst_b;			// To CPU of cpu.v
+   input [10:0]		st__saved_sp_3a;	// To CPU of cpu.v
    input [7:0] 	switches;		// To CPU of cpu.v
    
    initial $readmemh("jsops.hex", hatch_memory);
@@ -42,5 +43,6 @@ module top(/*AUTOARG*/
 	   .clk				(clk),
 	   .hatch_instruction		(hatch_instruction[47:0]),
 	   .rst_b			(rst_b),
+	   .st__saved_sp_3a		(st__saved_sp_3a[10:0]),
 	   .switches			(switches[7:0]));
 endmodule
