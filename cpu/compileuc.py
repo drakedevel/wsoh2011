@@ -12,10 +12,14 @@ outv = open(outv_name, "w+")
 inlines = infile.readlines()
 infile.close()
 
+inlines = [ line.rstrip()
+            for line
+            in inlines
+            if len(line.strip())
+               and not line.lstrip().startswith("//") ]
+
 index = 0
-for line in [x.rstrip() for x in inlines]:
-    if len(line.strip()) == 0:
-        continue
+for line in inlines:
     if line[0] == '\t':
         index += 1
     else:
@@ -41,8 +45,8 @@ outv.write("end\n")
 outv.write("reg [31:0] microprogram[0:%d];\n" % (index - 1))
 outv.write("initial begin\n")
 index = 0
-for line in [x.rstrip() for x in inlines]:
-    if not len(line.strip()) == 0 and line[0] == '\t':
+for line in inlines:
+    if line[0] == '\t':
         outv.write("    microprogram[%d] = %s;\n" % (index, line.strip()))
         index += 1
 outv.write("end\n")

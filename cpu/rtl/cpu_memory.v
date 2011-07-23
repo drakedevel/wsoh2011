@@ -67,7 +67,11 @@ module cpu_memory(/*AUTOARG*/
       end else begin
 	 // Generated signals
 	 c__to_push_4a <= c__to_push_3a;
-	 st__to_pop_4a <= st__to_pop_3a;
+
+	 if (st__to_pop_3a == 2'd3)
+	    st__to_pop_4a <= alu__out_3a;
+	 else
+	    st__to_pop_4a <= st__to_pop_3a;
 
 	 case (c__to_push_3a)
 	   `UC_PUSHALU:
@@ -80,6 +84,26 @@ module cpu_memory(/*AUTOARG*/
 	     st__to_push_4a <= r1_3a;
 	   default:
 	     st__to_push_4a <= 35'bx;
+	 endcase
+
+	 case (c__branch_3a)
+	   `UC_BR_NONE:
+	     kill_4a <= 1'b0;
+	   `UC_BR_REL, `UC_BR_ALU:
+	     kill_4a <= 1'b1;
+	   `UC_BR_REL_COND:
+	     kill_4a <= alu__cond_3a;
+	   default:
+	     kill_4a <= 1'bx;
+	 endcase
+
+	 case (c__branch_3a)
+	   `UC_BR_REL, `UC_BR_REL_COND:
+	     branch_target_4a <= pc_3a + { {16{instruction_3a[15]}}, instruction_3a[15:0] };
+	   `UC_BR_ALU:
+	     branch_target_4a <= alu__out_3a + 6;
+	   default:
+	     branch_target_4a <= 32'bx;
 	 endcase
 	 
 	 // Pass through
