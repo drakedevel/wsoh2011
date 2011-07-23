@@ -7,11 +7,17 @@
 using namespace js;
 
 struct FunctionInfo {
-    FunctionInfo(JSContext *cx) : cx(cx), insnMap(cx), insns(cx) { }
-    FunctionInfo(const FunctionInfo &other) : cx(other.cx), insnMap(other.cx), insns(other.cx) { /* XXX No copying here! */ }
-    JSContext *cx;
-    Vector<jsbytecode *, 0, TempAllocPolicy> insnMap;
-    Vector<jsbytecode *, 0, TempAllocPolicy> insns;
+    FunctionInfo(){}
+    FunctionInfo(const FunctionInfo& other) : atom(other.atom), script(other.script) {
+        for (jsbytecode **i = other.insnMap.begin(); i != other.insnMap.end(); i++)
+            JS_ASSERT(insnMap.append(*i));
+        for (jsbytecode **i = other.insns.begin(); i != other.insns.end(); i++)
+            JS_ASSERT(insns.append(*i));
+    }
+    JSAtom *atom;
+    JSScript *script;
+    Vector<jsbytecode *, 0, SystemAllocPolicy> insnMap;
+    Vector<jsbytecode *, 0, SystemAllocPolicy> insns;
 };
 
 static JSClass dummy_class = {
@@ -38,10 +44,17 @@ JSPrincipals trustedPrincipals = {
     Subsume
 };
 
-static void ProcessFunction(FunctionInfo &fun, JSScript *s)
+static Vector<FunctionInfo, 0, SystemAllocPolicy> functions;
+
+static void PreprocessFunction(JSContext *cx, FunctionInfo &fun, JSFunction *jsfun, JSScript *s)
 {
     // Populate maps
     for (jsbytecode *pc = s->code; pc != s->code + s->length; ) {
+        fun.script = s;
+        if (jsfun)
+            fun.atom = jsfun->atom;
+        else
+            fun.atom = NULL;
         if (js_CodeSpec[*pc].length == -1)
             errx(1, "Found variable length op, aborting");
         if (!fun.insns.append(pc) || !fun.insnMap.append(pc))
@@ -52,9 +65,15 @@ static void ProcessFunction(FunctionInfo &fun, JSScript *s)
         }
         pc += js_CodeSpec[*pc].length;
     }
+}
 
+static void EmitFunction(JSContext *cx, FunctionInfo &fun)
+{
     // Emit instructions
-    for (jsbytecode *pc = s->code; pc != s->code + s->length; ) {
+    JSScript *s = fun.script;
+    for (jsbytecode *pc = s->code; pc < s->code + s->length; ) {
+        if (*pc == JSOP_DEFFUN)
+            goto fuckyou;
         printf("%02x", *pc);
         switch (js_CodeSpec[*pc].format & JOF_TYPEMASK) {
         case JOF_BYTE:
@@ -80,9 +99,22 @@ static void ProcessFunction(FunctionInfo &fun, JSScript *s)
         case JOF_JUMP: 
             errx(2, "Jump op");
             break;
-        case JOF_ATOM:
-            errx(2, "Atoms are not supported.");
+        case JOF_ATOM: {
+            JSAtom *atom;
+            GET_ATOM_FROM_BYTECODE(s, pc, 0, atom);
+            FunctionInfo *found = NULL;
+            for (FunctionInfo *other = functions.begin(); other != functions.end(); other++) {
+                if (other->atom == atom) {
+                    found = other;
+                    break;
+                }
+            }
+            if (!found)
+                errx(2, "Unknown atom");
+
+            printf("00%08d\n", found - functions.begin());
             break;
+        }
         case JOF_INT8:
             printf("01%08x\n", (int)(*(signed char *)(pc + 1)));
             break;
@@ -96,9 +128,9 @@ static void ProcessFunction(FunctionInfo &fun, JSScript *s)
             errx(2, "Objects are not supported.");
             break;
         default:
-            errx(2, "Unknown opcode format encountered: %d", js_CodeSpec[*pc].format & JOF_TYPEMASK);
+            errx(2, "Unknown opcode (%hhu) format encountered: %d", *pc, js_CodeSpec[*pc].format & JOF_TYPEMASK);
         }
-
+    fuckyou:
         pc += js_CodeSpec[*pc].length;
     }
 }
@@ -132,23 +164,24 @@ int main(int argc, char **argv)
     JSScript *script = scriptObj->getScript();
 
 
-    Vector<FunctionInfo, 0, SystemAllocPolicy> functions;
-    if (!functions.append(FunctionInfo(cx)))
+    if (!functions.append(FunctionInfo()))
         errx(1, "OOM");
-    ProcessFunction(functions.back(), script);
-    /*
+    PreprocessFunction(cx, functions.back(), NULL, script);
     for (size_t i = 0; i < script->objects()->length; i++) {
         JSObject *o = script->objects()->vector[i];
         if (o->isFunction()) {
             JSFunction *fun = (JSFunction *)o;
             if (fun->isInterpreted()) {
-                if (!functions.append(FunctionInfo(cx)))
+                if (!functions.append(FunctionInfo()))
                     errx(1, "OOM");
-                ProcessFunction(functions.back(), fun->script());
+                PreprocessFunction(cx, functions.back(), fun, fun->script());
             }
         }
     }
-    */
+
+    for (FunctionInfo *f = functions.begin(); f != functions.end(); f++) {
+        EmitFunction(cx, *f);
+    }
 
     return 0;
 }
