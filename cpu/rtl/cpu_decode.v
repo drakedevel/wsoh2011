@@ -47,8 +47,8 @@ module cpu_decode(/*AUTOARG*/
    
    /*AUTOWIRE*/
    // Beginning of automatic wires (for undeclared instantiated-module outputs)
-   wire [31:0]		mc__control;		// From Microcode of microcode.v
-   wire			mc__more;		// From Microcode of microcode.v
+   wire [31:0]		mc__control_2a;		// From Microcode of microcode.v
+   wire			mc__more_2a;		// From Microcode of microcode.v
    // End of automatics
    
    /// COMBINATIONAL LOGIC ///
@@ -57,19 +57,19 @@ module cpu_decode(/*AUTOARG*/
 		      c__to_push_3a || st__to_pop_3a ||
 		      c__to_push_4a || st__to_pop_4a ||
 		      st__push_5a || st__to_pop_5a;
-   assign stall_2a = mc__more || mc__stall;
+   assign stall_2a = mc__more_2a || mc__stall;
 
    assign js_mode = pc_1a[0];
    assign opcode = instruction_1a[47:40];
 
-   assign alu__op_2a = mc__control[5:1];
-   assign st__to_pop_2a = { 9'b0, mc__control[7:6] };
-   assign c__to_push_2a = mc__control[10:8];
-   assign c__alu_right_2a = mc__control[12:11];
-   assign c__alu_left_2a = mc__control[14:13];
-   assign c__branch_2a = mc__control[16:15];
-   assign c__r0_2a = mc__control[17];
-   assign c__r1_2a = mc__control[18];
+   assign alu__op_2a = mc__control_2a[5:1];
+   assign st__to_pop_2a = { 9'b0, mc__control_2a[7:6] };
+   assign c__to_push_2a = mc__control_2a[10:8];
+   assign c__alu_right_2a = mc__control_2a[12:11];
+   assign c__alu_left_2a = mc__control_2a[14:13];
+   assign c__branch_2a = mc__control_2a[16:15];
+   assign c__r0_2a = mc__control_2a[17];
+   assign c__r1_2a = mc__control_2a[18];
 
    /// SEQUENTIAL LOGIC ///
 
@@ -95,8 +95,8 @@ module cpu_decode(/*AUTOARG*/
 
    microcode Microcode(/*AUTOINST*/
 		       // Outputs
-		       .mc__control	(mc__control[31:0]),
-		       .mc__more	(mc__more),
+		       .mc__control_2a	(mc__control_2a[31:0]),
+		       .mc__more_2a	(mc__more_2a),
 		       // Inputs
 		       .js_mode		(js_mode),
 		       .mc__stall	(mc__stall),
