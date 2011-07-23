@@ -8,8 +8,14 @@
 `define JSOP_ENTERWITH 8'd3
 `define JSOP_LEAVEWITH 8'd4
 `define JSOP_RETURN 8'd5
+
+// Done
 `define JSOP_GOTO 8'd6
+
+// Done
 `define JSOP_IFEQ 8'd7
+
+// Done
 `define JSOP_IFNE 8'd8
 `define JSOP_ARGUMENTS 8'd9
 `define JSOP_FORARG 8'd10
@@ -115,6 +121,8 @@
 `define JSOP_FUNAPPLY 8'd78
 `define JSOP_SWAP 8'd79
 `define JSOP_OBJECT 8'd80
+
+// Done
 `define JSOP_POP 8'd81
 `define JSOP_NEW 8'd82
 `define JSOP_TRAP 8'd83

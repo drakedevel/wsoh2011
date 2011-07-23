@@ -1,1 +1,14 @@
+verilog work ../rtl/cpu_fetch.v
+
 verilog work ../rtl/microcode.v
+verilog work ../rtl/lame_stack.v
+verilog work ../rtl/cpu_decode.v
+
+verilog work ../rtl/alu.v
+verilog work ../rtl/cpu_execute.v
+
+verilog work ../rtl/cpu_memory.v
+
+verilog work ../rtl/cpu_writeback.v
+
+verilog work ../rtl/cpu.v

@@ -2,4 +2,4 @@ run
 -ifn cpu.prj
 -ofn cpu.ngc
 -p xc3s1200e-5fg320
--top microcode
+-top cpu

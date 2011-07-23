@@ -22,9 +22,10 @@ module tb();
       rst_b = 1'b1;
 
       wait (hatch_address == 32'h00000000) hatch_instruction = { `OP_PUSHI, 8'b0, 32'h1337D00D };
-      wait (hatch_address == 32'h00000004) hatch_instruction = { `OP_PUSHI, 8'b0, 32'hCAFEBABE };
-      wait (hatch_address == 32'h00000008) hatch_instruction = { `OP_BITAND, 8'b0, 32'h0 };
-      wait (hatch_address == 32'h0000000c) hatch_instruction = { `OP_NOP, 8'b0, 32'h0 };
+      wait (hatch_address == 32'h00000006) hatch_instruction = { `OP_PUSHI, 8'b0, 32'hCAFEBABE };
+      wait (hatch_address == 32'h0000000c) hatch_instruction = { `OP_BITAND, 8'b0, 32'h0 };
+      wait (hatch_address == 32'h00000012) hatch_instruction = { `OP_GOTO, 8'b0, 16'h0, -16'h0012 };
+      wait (hatch_address == 32'h00000018) hatch_instruction = { `OP_NOP, 8'b0, 32'b0 };
       #1000;
       $finish();
    end

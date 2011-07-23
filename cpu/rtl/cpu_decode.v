@@ -1,12 +1,12 @@
 module cpu_decode(/*AUTOARG*/
    // Outputs
-   alu__op_2a, c__alu_left_2a, c__alu_right_2a, c__to_push_2a,
-   instruction_2a, pc_2a, stall_2a, st__top_0_2a, st__top_1_2a,
-   st__to_pop_2a,
+   alu__op_2a, c__alu_left_2a, c__alu_right_2a, c__branch_2a,
+   c__to_push_2a, instruction_2a, pc_2a, stall_2a, st__top_0_2a,
+   st__top_1_2a, st__to_pop_2a,
    // Inputs
-   instruction_1a, pc_1a, st__pop_5a, st__push_5a, st__to_pop_5a,
-   st__to_push_5a, c__to_push_3a, c__to_push_4a, st__to_pop_3a,
-   st__to_pop_4a, clk, rst_b
+   instruction_1a, kill_4a, pc_1a, st__pop_5a, st__push_5a,
+   st__to_pop_5a, st__to_push_5a, c__to_push_3a, c__to_push_4a,
+   st__to_pop_3a, st__to_pop_4a, clk, rst_b
    );
 
    /// PIPELINE INTERFACE ///
@@ -14,6 +14,7 @@ module cpu_decode(/*AUTOARG*/
    output [4:0]      alu__op_2a;
    output [1:0]      c__alu_left_2a;
    output [1:0]      c__alu_right_2a;
+   output [1:0]      c__branch_2a;
    output [1:0]      c__to_push_2a;
    output reg [47:0] instruction_2a;
    output reg [31:0] pc_2a;
@@ -22,6 +23,7 @@ module cpu_decode(/*AUTOARG*/
    output [34:0]     st__top_1_2a;
    output [10:0]     st__to_pop_2a;
    input [47:0]      instruction_1a;
+   input 	     kill_4a;
    input [31:0]      pc_1a;
    input 	     st__pop_5a;
    input 	     st__push_5a;
@@ -64,6 +66,7 @@ module cpu_decode(/*AUTOARG*/
    assign c__to_push_2a = mc__control[9:8];
    assign c__alu_right_2a = mc__control[11:10];
    assign c__alu_left_2a = mc__control[13:12];
+   assign c__branch_2a = mc__control[15:14];
 
    /// SEQUENTIAL LOGIC ///
 

@@ -1,0 +1,9 @@
+import os
+
+jssrcdir = os.getenv("JS_SOURCE")
+jsobjdir = os.getenv("JS_BUILD")
+
+Program('compile', ['compile.cpp'],
+        CPPPATH = [jsobjdir + "/dist/include", jssrcdir],
+        LIBS = ['js_static', 'pthread'],
+        LIBPATH = [jsobjdir])

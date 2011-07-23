@@ -2,18 +2,19 @@
 
 module cpu_execute(/*AUTOARG*/
    // Outputs
-   alu__cond_3a, alu__out_3a, c__to_push_3a, instruction_3a, pc_3a,
-   st__to_pop_3a,
+   alu__cond_3a, alu__out_3a, c__branch_3a, c__to_push_3a,
+   instruction_3a, pc_3a, st__to_pop_3a,
    // Inputs
-   alu__op_2a, c__alu_left_2a, c__alu_right_2a, c__to_push_2a,
-   instruction_2a, pc_2a, st__top_0_2a, st__top_1_2a, st__to_pop_2a,
-   clk, rst_b
+   alu__op_2a, c__alu_left_2a, c__alu_right_2a, c__branch_2a,
+   c__to_push_2a, instruction_2a, kill_4a, pc_2a, st__top_0_2a,
+   st__top_1_2a, st__to_pop_2a, clk, rst_b
    );
 
    /// PIPELINE INTERFACE ///
 
    output reg        alu__cond_3a;
    output reg [31:0] alu__out_3a;
+   output reg [1:0]  c__branch_3a;
    output reg [1:0]  c__to_push_3a;
    output reg [47:0] instruction_3a;
    output reg [31:0] pc_3a;
@@ -21,8 +22,10 @@ module cpu_execute(/*AUTOARG*/
    input [4:0] 	     alu__op_2a;
    input [1:0] 	     c__alu_left_2a;
    input [1:0] 	     c__alu_right_2a;
+   input [1:0] 	     c__branch_2a;
    input [1:0]	     c__to_push_2a;
    input [47:0]      instruction_2a;
+   input 	     kill_4a;
    input [31:0]      pc_2a;
    input [34:0]      st__top_0_2a;
    input [34:0]      st__top_1_2a;
@@ -76,6 +79,7 @@ module cpu_execute(/*AUTOARG*/
 	 // Beginning of autoreset for uninitialized flops
 	 alu__cond_3a <= 1'h0;
 	 alu__out_3a <= 32'h0;
+	 c__branch_3a <= 2'h0;
 	 c__to_push_3a <= 2'h0;
 	 instruction_3a <= 48'h0;
 	 pc_3a <= 32'h0;
@@ -85,10 +89,11 @@ module cpu_execute(/*AUTOARG*/
 	 // Generated signals
 	 alu__cond_3a <= alu__cond;
 	 alu__out_3a <= alu__out;
-	 c__to_push_3a <= c__to_push_2a;
 	 st__to_pop_3a <= st__to_pop_2a;
 
 	 // Pass through
+	 c__branch_3a <= c__branch_2a;
+	 c__to_push_3a <= c__to_push_2a;
 	 instruction_3a <= instruction_2a;
 	 pc_3a <= pc_2a;
       end

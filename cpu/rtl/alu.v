@@ -54,6 +54,10 @@ module alu(/*AUTOARG*/
 	  alu__out = alu__left + alu__right;
 	`ALU_SUB:
 	  alu__out = alu__left - alu__right;
+	`ALU_LEFT_EQZ:
+	  alu__out = alu__left == 0 ? { 31'b0, 1'b1 } : 32'b0;
+	`ALU_LEFT_NEZ:
+	  alu__out = alu__left != 0 ? { 31'b0, 1'b1 } : 32'b0;
 	default:
 	  alu__out = 32'bx;
       endcase

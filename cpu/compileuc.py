@@ -22,6 +22,8 @@ for line in [x.rstrip() for x in inlines]:
         outvh.write("`define UC_OFFSET_%s 10'd%d\n" % (line, index))
 outvh.close()
 
+outv.write("`include \"alu.vh\"\n")
+outv.write("`include \"opcode.vh\"\n")
 outv.write("reg [10:0] microprogram_label[0:511];\n")
 outv.write("integer mcinit_i;\n")
 outv.write("initial begin\n")

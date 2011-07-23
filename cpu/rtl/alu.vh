@@ -14,3 +14,5 @@
 `define ALU_URSH 5'd13
 `define ALU_ADD 5'd14
 `define ALU_SUB 5'd15
+`define ALU_LEFT_EQZ 5'd16
+`define ALU_LEFT_NEZ 5'd17
