@@ -25,13 +25,18 @@ initial begin
     microprogram_label[{ 1'b1, `JSOP_URSH }] = { 1'b1, `UC_OFFSET_JSOP_URSH };
     microprogram_label[{ 1'b1, `JSOP_ADD }] = { 1'b1, `UC_OFFSET_JSOP_ADD };
     microprogram_label[{ 1'b1, `JSOP_SUB }] = { 1'b1, `UC_OFFSET_JSOP_SUB };
+    microprogram_label[{ 1'b1, `JSOP_NOT }] = { 1'b1, `UC_OFFSET_JSOP_NOT };
+    microprogram_label[{ 1'b1, `JSOP_BITNOT }] = { 1'b1, `UC_OFFSET_JSOP_BITNOT };
+    microprogram_label[{ 1'b1, `JSOP_NEG }] = { 1'b1, `UC_OFFSET_JSOP_NEG };
+    microprogram_label[{ 1'b1, `JSOP_VOID }] = { 1'b1, `UC_OFFSET_JSOP_VOID };
+    microprogram_label[{ 1'b1, `JSOP_POP }] = { 1'b1, `UC_OFFSET_JSOP_POP };
     microprogram_label[{ 1'b0, `OP_NOP }] = { 1'b1, `UC_OFFSET_OP_NOP };
     microprogram_label[{ 1'b0, `OP_PUSHI }] = { 1'b1, `UC_OFFSET_OP_PUSHI };
     microprogram_label[{ 1'b0, `OP_PUSHV }] = { 1'b1, `UC_OFFSET_OP_PUSHV };
     microprogram_label[{ 1'b0, `OP_BITAND }] = { 1'b1, `UC_OFFSET_OP_BITAND };
     microprogram_label[{ 1'b0, `OP_GOTO }] = { 1'b1, `UC_OFFSET_OP_GOTO };
 end
-reg [31:0] microprogram[0:27];
+reg [31:0] microprogram[0:32];
 initial begin
     microprogram[0] = { 32'b0 };
     microprogram[1] = { 16'b0, `UC_BR_NONE, `UC_NOPUSH, `UC_POP(2'b0), `ALU_LEFT, `UC_DONE };
@@ -56,9 +61,14 @@ initial begin
     microprogram[20] = { 16'b0, `UC_BR_NONE, `UC_LEFT_STK0, `UC_RIGHT_STK1, `UC_PUSHALU, `UC_POP(2'd2), `ALU_URSH, `UC_DONE };
     microprogram[21] = { 16'b0, `UC_BR_NONE, `UC_LEFT_STK0, `UC_RIGHT_STK1, `UC_PUSHALU, `UC_POP(2'd2), `ALU_ADD, `UC_DONE };
     microprogram[22] = { 16'b0, `UC_BR_NONE, `UC_LEFT_STK0, `UC_RIGHT_STK1, `UC_PUSHALU, `UC_POP(2'd2), `ALU_SUB, `UC_DONE };
-    microprogram[23] = { 31'b0, `UC_DONE };
-    microprogram[24] = { 16'b0, `UC_BR_NONE, `UC_LEFT_IMM, `UC_RIGHT_IMM, `UC_PUSHALU, `UC_POP(2'd0), `ALU_LEFT, `UC_DONE };
-    microprogram[25] = { 16'b0, `UC_BR_NONE, `UC_LEFT_IMM, `UC_RIGHT_IMM, `UC_PUSHIMM, `UC_POP(2'd0), `ALU_LEFT, `UC_DONE };
-    microprogram[26] = { 16'b0, `UC_BR_NONE, `UC_LEFT_STK0, `UC_RIGHT_STK1, `UC_PUSHALU, `UC_POP(2'd2), `ALU_BITAND, `UC_DONE };
-    microprogram[27] = { 16'b0, `UC_BR_REL, `UC_LEFT_IMM, `UC_RIGHT_IMM, `UC_NOPUSH, `UC_POP(2'd0), `ALU_LEFT, `UC_DONE };
+    microprogram[23] = { 16'b0, `UC_BR_NONE, `UC_LEFT_STK0, `UC_RIGHT_IMM, `UC_PUSHALU, `UC_POP(2'd1), `ALU_NOT, `UC_DONE };
+    microprogram[24] = { 16'b0, `UC_BR_NONE, `UC_LEFT_STK0, `UC_RIGHT_IMM, `UC_PUSHALU, `UC_POP(2'd1), `ALU_BITNOT, `UC_DONE };
+    microprogram[25] = { 16'b0, `UC_BR_NONE, `UC_LEFT_STK0, `UC_RIGHT_IMM, `UC_PUSHALU, `UC_POP(2'd1), `ALU_NEG, `UC_DONE };
+    microprogram[26] = { 16'b0, `UC_BR_NONE, `UC_LEFT_IMM, `UC_RIGHT_IMM, `UC_PUSHIMM, `UC_POP(2'd1), `ALU_LEFT, `UC_DONE };
+    microprogram[27] = { 16'b0, `UC_BR_NONE, `UC_LEFT_IMM, `UC_RIGHT_IMM, `UC_NOPUSH, `UC_POP(2'd1), `ALU_LEFT, `UC_DONE };
+    microprogram[28] = { 31'b0, `UC_DONE };
+    microprogram[29] = { 16'b0, `UC_BR_NONE, `UC_LEFT_IMM, `UC_RIGHT_IMM, `UC_PUSHALU, `UC_POP(2'd0), `ALU_LEFT, `UC_DONE };
+    microprogram[30] = { 16'b0, `UC_BR_NONE, `UC_LEFT_IMM, `UC_RIGHT_IMM, `UC_PUSHIMM, `UC_POP(2'd0), `ALU_LEFT, `UC_DONE };
+    microprogram[31] = { 16'b0, `UC_BR_NONE, `UC_LEFT_STK0, `UC_RIGHT_STK1, `UC_PUSHALU, `UC_POP(2'd2), `ALU_BITAND, `UC_DONE };
+    microprogram[32] = { 16'b0, `UC_BR_REL, `UC_LEFT_IMM, `UC_RIGHT_IMM, `UC_NOPUSH, `UC_POP(2'd0), `ALU_LEFT, `UC_DONE };
 end
