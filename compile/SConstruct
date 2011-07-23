@@ -4,6 +4,7 @@ jssrcdir = os.getenv("JS_SOURCE")
 jsobjdir = os.getenv("JS_BUILD")
 
 Program('compile', ['compile.cpp'],
+	CPPFLAGS = ['-g'],
         CPPPATH = [jsobjdir + "/dist/include", jssrcdir],
         LIBS = ['js_static', 'pthread'],
         LIBPATH = [jsobjdir])
