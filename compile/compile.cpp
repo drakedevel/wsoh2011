@@ -135,6 +135,12 @@ static void EmitFunction(JSContext *cx, FunctionInfo &fun)
         case JOF_UINT16:
             fprintf(jsopFile, "010000%04x\n", GET_UINT16(pc));
             break;
+        case JOF_INT32:
+            fprintf(jsopFile, "01%08x\n", GET_INT32(pc));
+            break;
+        case JOF_UINT24:
+            fprintf(jsopFile, "0100%06x\n", GET_UINT24(pc));
+            break;
         case JOF_QARG:
             fprintf(jsopFile, "000000%04x\n", GET_ARGNO(pc));
             break;

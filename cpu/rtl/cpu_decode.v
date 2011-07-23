@@ -1,8 +1,9 @@
 module cpu_decode(/*AUTOARG*/
    // Outputs
    alu__op_2a, c__alu_left_2a, c__alu_right_2a, c__branch_2a,
-   c__to_push_2a, c__r0_2a, c__r1_2a, instruction_2a, pc_2a, stall_2a,
-   st__top_0_2a, st__top_n_2a, st__to_pop_2a, st__sp_2a,
+   c__mem_write_2a, c__to_push_2a, c__r0_2a, c__r1_2a, instruction_2a,
+   pc_2a, stall_2a, st__top_0_2a, st__top_n_2a, st__to_pop_2a,
+   st__sp_2a,
    // Inputs
    instruction_1a, kill_4a, pc_1a, st__push_5a, st__to_pop_5a,
    st__to_push_5a, st__saved_sp_3a, c__to_push_3a, c__to_push_4a,
@@ -15,6 +16,7 @@ module cpu_decode(/*AUTOARG*/
    output [1:0]      c__alu_left_2a;
    output [1:0]      c__alu_right_2a;
    output [1:0]      c__branch_2a;
+   output 	     c__mem_write_2a;
    output [2:0]      c__to_push_2a;
    output            c__r0_2a;
    output            c__r1_2a;
@@ -77,6 +79,7 @@ module cpu_decode(/*AUTOARG*/
    assign c__r0_2a = mc__control_2a[17];
    assign c__r1_2a = mc__control_2a[18];
    assign c__top_n_src = mc__control_2a[20:19];
+   assign c__mem_write = mc__control_2a[21];
 
    always @(*) begin
       case (c__top_n_src)

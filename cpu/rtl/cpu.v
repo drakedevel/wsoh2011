@@ -29,7 +29,7 @@ module cpu(/*AUTOARG*/
 
    /// INTERNAL SIGNALS ///
 
-   wire 		st__saved_sp_3a;
+   wire [10:0]		st__saved_sp_3a;
 
    /*AUTOWIRE*/
    // Beginning of automatic wires (for undeclared instantiated-module outputs)
