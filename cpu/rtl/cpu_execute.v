@@ -76,6 +76,7 @@ module cpu_execute(/*AUTOARG*/
    end
    
    /// SEQUENTIAL LOGIC ///
+   wire elanus = kill_4a;
 
    always @(posedge clk or negedge rst_b) begin
       if (!rst_b) begin
@@ -95,19 +96,25 @@ module cpu_execute(/*AUTOARG*/
 	 // Generated signals
 	 alu__cond_3a <= alu__cond;
 	 alu__out_3a <= alu__out;
-	 st__to_pop_3a <= st__to_pop_2a;
 
-	 // Pass through
-	 c__branch_3a <= c__branch_2a;
-	 c__to_push_3a <= c__to_push_2a;
+	 if (elanus) begin
+	    st__to_pop_3a <= 11'h0;
+	    c__branch_3a <= 2'h0;
+	    c__to_push_3a <= 3'h0;
+         end else begin
+	    st__to_pop_3a <= st__to_pop_2a;
+	    c__branch_3a <= c__branch_2a;
+	    c__to_push_3a <= c__to_push_2a;
+         end
+
 	 instruction_3a <= instruction_2a;
 	 pc_3a <= pc_2a;
              
-         if (c__r0_2a) begin
+         if (c__r0_2a && !elanus) begin
             r0_3a <= st__top_0_2a;
          end
 
-         if (c__r1_2a) begin
+         if (c__r1_2a && !elanus) begin
             r1_3a <= st__top_1_2a;
          end
       end
