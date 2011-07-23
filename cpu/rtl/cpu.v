@@ -3,7 +3,7 @@ module cpu(/*AUTOARG*/
    vgaRed, vgaGreen, vgaBlue, st__sp_2a, leds, hatch_address, Vsync,
    Hsync,
    // Inputs
-   switches, rst_b, hatch_instruction, clk
+   switches, st__saved_sp_3a, rst_b, hatch_instruction, clk
    );
 
    /// WORLD INTERFACE ///
@@ -24,12 +24,13 @@ module cpu(/*AUTOARG*/
    input		clk;			// To Fetch of cpu_fetch.v, ...
    input [47:0]		hatch_instruction;	// To Fetch of cpu_fetch.v, ...
    input		rst_b;			// To Fetch of cpu_fetch.v, ...
+   input [10:0]		st__saved_sp_3a;	// To Decode of cpu_decode.v
    input [7:0]		switches;		// To Memory of cpu_memory.v
    // End of automatics
 
    /// INTERNAL SIGNALS ///
 
-   wire 		st__saved_sp_3a;
+//   wire 		st__saved_sp_3a;
 
    /*AUTOWIRE*/
    // Beginning of automatic wires (for undeclared instantiated-module outputs)

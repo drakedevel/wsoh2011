@@ -3,7 +3,7 @@ module top(/*AUTOARG*/
    vgaRed, vgaGreen, vgaBlue, st__sp_2a, leds, hatch_address, Vsync,
    Hsync,
    // Inputs
-   switches, rst_b, clk
+   switches, st__saved_sp_3a, rst_b, clk
    );
 
    wire [47:0] hatch_instruction;
@@ -23,6 +23,7 @@ module top(/*AUTOARG*/
    // Beginning of automatic inputs (from unused autoinst inputs)
    input		clk;			// To CPU of cpu.v
    input		rst_b;			// To CPU of cpu.v
+   input [10:0]		st__saved_sp_3a;	// To CPU of cpu.v
    input [7:0]		switches;		// To CPU of cpu.v
    // End of automatics
 
@@ -46,5 +47,6 @@ module top(/*AUTOARG*/
 	   .clk				(clk),
 	   .hatch_instruction		(hatch_instruction[47:0]),
 	   .rst_b			(rst_b),
+	   .st__saved_sp_3a		(st__saved_sp_3a[10:0]),
 	   .switches			(switches[7:0]));
 endmodule
