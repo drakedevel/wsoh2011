@@ -42,8 +42,11 @@ module tb();
 
       wait (hatch_address == 32'h00001001) hatch_instruction = { `JSOP_PUSH, 8'b1, 32'h15410AAA };
  */
-/*
       wait (hatch_address == 32'h00001007) hatch_instruction = { `JSOP_RETURN, 8'b0, 32'h0 };
+      wait (hatch_address == 32'h00000019) hatch_instruction = { `JSOP_NOP, 8'b0, 32'h0 };
+
+      #1000;
+/*
       wait (hatch_address == 32'h0000101F) hatch_instruction = { `JSOP_NOP, 8'b0, 32'h0 };
 
       wait (hatch_address == 32'h00000013) hatch_instruction = { `JSOP_NOP, 8'b0, 32'h0 };
@@ -52,7 +55,6 @@ module tb();
       wait (hatch_address == 32'h00000018) hatch_instruction = { `OP_BITAND, 8'b0, 32'h0 };
       wait (hatch_address == 32'h0000001e) hatch_instruction = { `OP_NOP, 8'b0, 32'b0 };
 */
-      #1000;
       $finish();
    end
 

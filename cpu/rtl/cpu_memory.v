@@ -34,15 +34,6 @@ module cpu_memory(/*AUTOARG*/
    /// INTERNAL SIGNALS ///
 
    /*AUTOWIRE*/
-   // Beginning of automatic wires (for undeclared instantiated-module outputs)
-   wire			Hsync;			// From IO of iobus.v
-   wire			Vsync;			// From IO of iobus.v
-   wire [31:0]		bus__rddata_4a;		// From IO of iobus.v
-   wire [7:0]		leds;			// From IO of iobus.v
-   wire [2:3]		vgaBlue;		// From IO of iobus.v
-   wire [1:3]		vgaGreen;		// From IO of iobus.v
-   wire [1:3]		vgaRed;			// From IO of iobus.v
-   // End of automatics
    
    /// SEQUENTIAL LOGIC ///
 
@@ -50,7 +41,7 @@ module cpu_memory(/*AUTOARG*/
       case (c__branch_3a)
 	`UC_BR_NONE:
 	  kill_4a = 1'b0;
-	`UC_BR_REL:
+	`UC_BR_REL, `UC_BR_ALU:
 	  kill_4a = 1'b1;
 	`UC_BR_REL_COND:
 	  kill_4a = alu__cond_3a;
@@ -61,6 +52,8 @@ module cpu_memory(/*AUTOARG*/
       case (c__branch_3a)
 	`UC_BR_REL, `UC_BR_REL_COND:
 	  branch_target_4a = pc_3a + { {16{instruction_3a[15]}}, instruction_3a[15:0] };
+	`UC_BR_ALU:
+	  branch_target_4a <= alu__out_3a;
 	default:
 	  branch_target_4a = 32'bx;
       endcase
@@ -70,9 +63,7 @@ module cpu_memory(/*AUTOARG*/
       if (!rst_b) begin
 	 /*AUTORESET*/
 	 // Beginning of autoreset for uninitialized flops
-	 branch_target_4a <= 32'h0;
 	 c__to_push_4a <= 3'h0;
-	 kill_4a <= 1'h0;
 	 pc_4a <= 32'h0;
 	 st__to_pop_4a <= 11'h0;
 	 st__to_push_4a <= 35'h0;
@@ -98,27 +89,6 @@ module cpu_memory(/*AUTOARG*/
 	   default:
 	     st__to_push_4a <= 35'bx;
 	 endcase
-
-	 case (c__branch_3a)
-	   `UC_BR_NONE:
-	     kill_4a <= 1'b0;
-	   `UC_BR_REL, `UC_BR_ALU:
-	     kill_4a <= 1'b1;
-	   `UC_BR_REL_COND:
-	     kill_4a <= alu__cond_3a;
-	   default:
-	     kill_4a <= 1'bx;
-	 endcase
-
-	 case (c__branch_3a)
-	   `UC_BR_REL, `UC_BR_REL_COND:
-	     branch_target_4a <= pc_3a + { {16{instruction_3a[15]}}, instruction_3a[15:0] };
-	   `UC_BR_ALU:
-	     branch_target_4a <= alu__out_3a + 6;
-	   default:
-	     branch_target_4a <= 32'bx;
-	 endcase
-	 
 	 // Pass through
 	 pc_4a <= pc_3a; 
       end
