@@ -34,7 +34,7 @@ module cpu_fetch(/*AUTOARG*/
 	 /*AUTORESET*/
 	 // Beginning of autoreset for uninitialized flops
 	 instruction_1a <= 48'h0;
-	 next_pc <= 32'h00000001;
+	 next_pc <= 32'h0;
 	 pc_1a <= 32'h0;
 	 // End of automatics
       end else begin

@@ -1,8 +1,8 @@
 module cpu(/*AUTOARG*/
    // Outputs
-   st__sp_2a, st__saved_pc_3a, hatch_address,
+   st__sp_2a, hatch_address,
    // Inputs
-   st__saved_sp_3a, st__saved_pc_2a, rst_b, hatch_instruction, clk
+   st__saved_sp_3a, rst_b, hatch_instruction, clk
    );
 
    /// WORLD INTERFACE ///
@@ -10,7 +10,6 @@ module cpu(/*AUTOARG*/
    /*AUTOOUTPUT*/
    // Beginning of automatic outputs (from unused autoinst outputs)
    output [31:0]	hatch_address;		// From Fetch of cpu_fetch.v
-   output [10:0]	st__saved_pc_3a;	// From Execute of cpu_execute.v
    output [10:0]	st__sp_2a;		// From Decode of cpu_decode.v
    // End of automatics
    /*AUTOINPUT*/
@@ -18,7 +17,6 @@ module cpu(/*AUTOARG*/
    input		clk;			// To Fetch of cpu_fetch.v, ...
    input [47:0]		hatch_instruction;	// To Fetch of cpu_fetch.v, ...
    input		rst_b;			// To Fetch of cpu_fetch.v, ...
-   input [10:0]		st__saved_pc_2a;	// To Execute of cpu_execute.v
    input [10:0]		st__saved_sp_3a;	// To Decode of cpu_decode.v
    // End of automatics
 
@@ -118,7 +116,6 @@ module cpu(/*AUTOARG*/
 		       .r0_3a		(r0_3a[34:0]),
 		       .r1_3a		(r1_3a[34:0]),
 		       .st__to_pop_3a	(st__to_pop_3a[10:0]),
-		       .st__saved_pc_3a	(st__saved_pc_3a[10:0]),
 		       // Inputs
 		       .alu__op_2a	(alu__op_2a[4:0]),
 		       .c__alu_left_2a	(c__alu_left_2a[1:0]),
@@ -134,7 +131,6 @@ module cpu(/*AUTOARG*/
 		       .st__top_0_2a	(st__top_0_2a[34:0]),
 		       .st__top_n_2a	(st__top_n_2a[34:0]),
 		       .st__to_pop_2a	(st__to_pop_2a[10:0]),
-		       .st__saved_pc_2a	(st__saved_pc_2a[10:0]),
 		       .clk		(clk),
 		       .rst_b		(rst_b));
 

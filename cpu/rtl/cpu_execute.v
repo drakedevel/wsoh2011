@@ -4,12 +4,10 @@ module cpu_execute(/*AUTOARG*/
    // Outputs
    alu__cond_3a, alu__out_3a, c__branch_3a, c__to_push_3a,
    instruction_3a, pc_3a, r0_3a, r1_3a, st__to_pop_3a,
-   st__saved_pc_3a,
    // Inputs
    alu__op_2a, c__alu_left_2a, c__alu_right_2a, c__branch_2a,
    c__to_push_2a, c__r0_2a, c__r1_2a, instruction_2a, kill_4a, pc_2a,
-   pc_1a, st__top_0_2a, st__top_n_2a, st__to_pop_2a, st__saved_pc_2a,
-   clk, rst_b
+   pc_1a, st__top_0_2a, st__top_n_2a, st__to_pop_2a, clk, rst_b
    );
 
    /// PIPELINE INTERFACE ///
@@ -23,7 +21,7 @@ module cpu_execute(/*AUTOARG*/
    output reg [34:0] r0_3a;
    output reg [34:0] r1_3a;
    output reg [10:0] st__to_pop_3a;
-   output reg [10:0] st__saved_pc_3a;
+//   output reg [10:0] st__saved_sp_3a;
    input [4:0] 	     alu__op_2a;
    input [1:0] 	     c__alu_left_2a;
    input [1:0] 	     c__alu_right_2a;
@@ -38,7 +36,7 @@ module cpu_execute(/*AUTOARG*/
    input [34:0]      st__top_0_2a;
    input [34:0]      st__top_n_2a;
    input [10:0]      st__to_pop_2a;
-   input [10:0]      st__saved_pc_2a;
+//   input [10:0]      st__saved_sp_2a;
    
    /// WORLD INTERFACE ///
    
@@ -101,14 +99,13 @@ module cpu_execute(/*AUTOARG*/
 	 pc_3a <= 32'h0;
 	 r0_3a <= 35'h0;
 	 r1_3a <= 35'h0;
-	 st__saved_pc_3a <= 11'h0;
 	 st__to_pop_3a <= 11'h0;
 	 // End of automatics
       end else begin
 	 // Generated signals
 	 alu__cond_3a <= alu__cond;
 	 alu__out_3a <= alu__out;
-	 st__saved_pc_3a <= st__saved_pc_2a;
+//	 st__saved_sp_3a <= st__saved_sp_2a;
 
 	 if (killed) begin
 	    st__to_pop_3a <= 11'h0;
