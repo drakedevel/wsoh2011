@@ -44,6 +44,10 @@ JSPrincipals trustedPrincipals = {
     Subsume
 };
 
+static uint32 offset = 0;
+static FILE *jsopFile;
+static FILE *funtabFile;
+
 static Vector<FunctionInfo, 0, SystemAllocPolicy> functions;
 
 static void PreprocessFunction(JSContext *cx, FunctionInfo &fun, JSFunction *jsfun, JSScript *s)
@@ -72,27 +76,28 @@ static void EmitFunction(JSContext *cx, FunctionInfo &fun)
     // Emit instructions
     JSScript *s = fun.script;
     for (jsbytecode *pc = s->code; pc < s->code + s->length; ) {
+        offset++;
         if (*pc == JSOP_DEFFUN)
             goto fuckyou;
-        printf("%02x", *pc);
+        fprintf(jsopFile, "%02x", *pc);
         switch (js_CodeSpec[*pc].format & JOF_TYPEMASK) {
         case JOF_BYTE:
             switch (*pc) {
             case JSOP_ZERO:
             case JSOP_FALSE:
-                printf("0100000000\n");
+                fprintf(jsopFile, "0100000000\n");
                 break;
 
             case JSOP_ONE:
             case JSOP_TRUE:
-                printf("0100000001\n");
+                fprintf(jsopFile, "0100000001\n");
                 break;
 
             case JSOP_PUSH:
             case JSOP_VOID:
             case JSOP_NULL:
             default:
-                printf("0000000000\n");
+                fprintf(jsopFile, "0000000000\n");
                 break;
             }
             break;
@@ -103,7 +108,7 @@ static void EmitFunction(JSContext *cx, FunctionInfo &fun)
                 for (jsbytecode *i = pc; i < target; i += js_CodeSpec[*i].length, new_target++);
             else
                 for (jsbytecode *i = target; i < pc; i += js_CodeSpec[*i].length, new_target--);
-            printf("000000%04hx\n", new_target);
+            fprintf(jsopFile, "000000%04hx\n", new_target);
             break;
         }
         case JOF_ATOM: {
@@ -119,17 +124,17 @@ static void EmitFunction(JSContext *cx, FunctionInfo &fun)
             if (!found)
                 errx(2, "Unknown (or non-function atom");
 
-            printf("00%08d\n", found - functions.begin());
+            fprintf(jsopFile, "00%08d\n", found - functions.begin());
             break;
         }
         case JOF_INT8:
-            printf("01%08x\n", GET_INT8(pc));
+            fprintf(jsopFile, "01%08x\n", GET_INT8(pc));
             break;
         case JOF_UINT16:
-            printf("010000%04x\n", GET_UINT16(pc));
+            fprintf(jsopFile, "010000%04x\n", GET_UINT16(pc));
             break;
         case JOF_QARG:
-            printf("000000%04x\n", GET_ARGNO(pc));
+            fprintf(jsopFile, "000000%04x\n", GET_ARGNO(pc));
             break;
         case JOF_OBJECT:
             errx(2, "Objects are not supported.");
@@ -144,8 +149,15 @@ static void EmitFunction(JSContext *cx, FunctionInfo &fun)
 
 int main(int argc, char **argv)
 {
-    if (argc < 2)
-        errx(1, "Usage: compile <script>");
+    if (argc < 4)
+        errx(1, "Usage: compile <in:script> <out:jsops> <out:offs>");
+
+    jsopFile = fopen(argv[2], "w+");
+    if (!jsopFile)
+        err(1, "Could not open jsops file");
+    funtabFile = fopen(argv[3], "w+");
+    if (!funtabFile)
+        err(1, "Could not open funtab file");
 
     JSRuntime *runtime = JS_NewRuntime(160 * 1024 * 1024);
     if (!runtime)
@@ -170,7 +182,6 @@ int main(int argc, char **argv)
         errx(1, "Failed to compile script");
     JSScript *script = scriptObj->getScript();
 
-
     if (!functions.append(FunctionInfo()))
         errx(1, "OOM");
     PreprocessFunction(cx, functions.back(), NULL, script);
@@ -187,6 +198,7 @@ int main(int argc, char **argv)
     }
 
     for (FunctionInfo *f = functions.begin(); f != functions.end(); f++) {
+        fprintf(funtabFile, "%08x\n", offset);
         EmitFunction(cx, *f);
     }
 
