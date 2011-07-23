@@ -16,3 +16,6 @@
 `define ALU_SUB 5'd15
 `define ALU_LEFT_EQZ 5'd16
 `define ALU_LEFT_NEZ 5'd17
+`define ALU_NOT 5'd18
+`define ALU_BITNOT 5'd19
+`define ALU_NEG 5'd20

@@ -1,86 +1,44 @@
-// Done
-`define JSOP_NOP 8'd0
-
-// Done
-// N.B. Expando a real JSOP_PUSH to have an immediate undefined value
-`define JSOP_PUSH 8'd1
+`define JSOP_NOP 8'd0			// Done
+`define JSOP_PUSH 8'd1			// Done N.B. Expando a real JSOP_PUSH to have an immediate undefined value
 `define JSOP_POPV 8'd2
 `define JSOP_ENTERWITH 8'd3
 `define JSOP_LEAVEWITH 8'd4
 `define JSOP_RETURN 8'd5
-
-// Done
-`define JSOP_GOTO 8'd6
-
-// Done
-`define JSOP_IFEQ 8'd7
-
-// Done
-`define JSOP_IFNE 8'd8
+`define JSOP_GOTO 8'd6			// Done
+`define JSOP_IFEQ 8'd7			// Done
+`define JSOP_IFNE 8'd8			// Done
 `define JSOP_ARGUMENTS 8'd9
 `define JSOP_FORARG 8'd10
 `define JSOP_FORLOCAL 8'd11
-
-// Done
-`define JSOP_DUP 8'd12
-
-// Done
-`define JSOP_DUP2 8'd13
+`define JSOP_DUP 8'd12			// Done 
+`define JSOP_DUP2 8'd13			// Done
 `define JSOP_SETCONST 8'd14
-
-// Done
-`define JSOP_BITOR 8'd15
-
-// Done
-`define JSOP_BITXOR 8'd16
-
-// Done
-`define JSOP_BITAND 8'd17
-
-// Done
-`define JSOP_EQ 8'd18
-
-// Done
-`define JSOP_NE 8'd19
-
-// Done
-`define JSOP_LT 8'd20
-
-// Done
-`define JSOP_LE 8'd21
-
-// Done
-`define JSOP_GT 8'd22
-
-// Done
-`define JSOP_GE 8'd23
-
-// Done
-`define JSOP_LSH 8'd24
-
-// Done
-`define JSOP_RSH 8'd25
-
-// Done
-`define JSOP_URSH 8'd26
-
-// Done
-`define JSOP_ADD 8'd27
-
-// Done
-`define JSOP_SUB 8'd28
+`define JSOP_BITOR 8'd15		// Done
+`define JSOP_BITXOR 8'd16		// Done
+`define JSOP_BITAND 8'd17		// Done
+`define JSOP_EQ 8'd18			// Done
+`define JSOP_NE 8'd19			// Done
+`define JSOP_LT 8'd20			// Done
+`define JSOP_LE 8'd21			// Done
+`define JSOP_GT 8'd22			// Done
+`define JSOP_GE 8'd23			// Done
+`define JSOP_LSH 8'd24			// Done
+`define JSOP_RSH 8'd25			// Done
+`define JSOP_URSH 8'd26			// Done
+`define JSOP_ADD 8'd27			// Done
+`define JSOP_SUB 8'd28			// Done
 `define JSOP_MUL 8'd29
 `define JSOP_DIV 8'd30
 `define JSOP_MOD 8'd31
-`define JSOP_NOT 8'd32
-`define JSOP_BITNOT 8'd33
-`define JSOP_NEG 8'd34
+`define JSOP_NOT 8'd32			// Done
+`define JSOP_BITNOT 8'd33		// Done
+`define JSOP_NEG 8'd34			// Done
 `define JSOP_POS 8'd35
 `define JSOP_DELNAME 8'd36
 `define JSOP_DELPROP 8'd37
 `define JSOP_DELELEM 8'd38
 `define JSOP_TYPEOF 8'd39
-`define JSOP_VOID 8'd40
+`define JSOP_VOID 8'd40			// Done N.B. like JSOP_PUSH, must have immediate undefined value
 `define JSOP_INCNAME 8'd41
 `define JSOP_INCPROP 8'd42
 `define JSOP_INCELEM 8'd43
@@ -121,9 +79,7 @@
 `define JSOP_FUNAPPLY 8'd78
 `define JSOP_SWAP 8'd79
 `define JSOP_OBJECT 8'd80
-
-// Done
-`define JSOP_POP 8'd81
+`define JSOP_POP 8'd81			// Done
 `define JSOP_NEW 8'd82
 `define JSOP_TRAP 8'd83
 `define JSOP_GETARG 8'd84
