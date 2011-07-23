@@ -33,6 +33,26 @@ module cpu_memory(/*AUTOARG*/
    
    /// SEQUENTIAL LOGIC ///
 
+   always @* begin
+      case (c__branch_3a)
+	`UC_BR_NONE:
+	  kill_4a = 1'b0;
+	`UC_BR_REL:
+	  kill_4a = 1'b1;
+	`UC_BR_REL_COND:
+	  kill_4a = alu__cond_3a;
+	default:
+	  kill_4a = 1'bx;
+      endcase
+
+      case (c__branch_3a)
+	`UC_BR_REL, `UC_BR_REL_COND:
+	  branch_target_4a = pc_3a + { {16{instruction_3a[15]}}, instruction_3a[15:0] };
+	default:
+	  branch_target_4a = 32'bx;
+      endcase
+   end
+
    always @(posedge clk or negedge rst_b) begin
       if (!rst_b) begin
 	 /*AUTORESET*/
@@ -60,24 +80,6 @@ module cpu_memory(/*AUTOARG*/
 	     st__to_push_4a <= r1_3a;
 	   default:
 	     st__to_push_4a <= 35'bx;
-	 endcase
-
-	 case (c__branch_3a)
-	   `UC_BR_NONE:
-	     kill_4a <= 1'b0;
-	   `UC_BR_REL:
-	     kill_4a <= 1'b1;
-	   `UC_BR_REL_COND:
-	     kill_4a <= alu__cond_3a;
-	   default:
-	     kill_4a <= 1'bx;
-	 endcase
-
-	 case (c__branch_3a)
-	   `UC_BR_REL, `UC_BR_REL_COND:
-	     branch_target_4a <= pc_3a + { {16{instruction_3a[15]}}, instruction_3a[15:0] };
-	   default:
-	     branch_target_4a <= 32'bx;
 	 endcase
 	 
 	 // Pass through
