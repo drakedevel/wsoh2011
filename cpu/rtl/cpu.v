@@ -41,6 +41,9 @@ module cpu(/*AUTOARG*/
    wire [1:0]		c__alu_right_2a;	// From Decode of cpu_decode.v
    wire [1:0]		c__branch_2a;		// From Decode of cpu_decode.v
    wire [1:0]		c__branch_3a;		// From Execute of cpu_execute.v
+   wire [7:0]		c__mem_addr_3a;		// From Execute of cpu_execute.v
+   wire			c__mem_write_2a;	// From Decode of cpu_decode.v
+   wire			c__mem_write_3a;	// From Execute of cpu_execute.v
    wire			c__r0_2a;		// From Decode of cpu_decode.v
    wire			c__r1_2a;		// From Decode of cpu_decode.v
    wire [2:0]		c__to_push_2a;		// From Decode of cpu_decode.v
@@ -89,6 +92,7 @@ module cpu(/*AUTOARG*/
 		     .c__alu_left_2a	(c__alu_left_2a[1:0]),
 		     .c__alu_right_2a	(c__alu_right_2a[1:0]),
 		     .c__branch_2a	(c__branch_2a[1:0]),
+		     .c__mem_write_2a	(c__mem_write_2a),
 		     .c__to_push_2a	(c__to_push_2a[2:0]),
 		     .c__r0_2a		(c__r0_2a),
 		     .c__r1_2a		(c__r1_2a),
@@ -119,6 +123,8 @@ module cpu(/*AUTOARG*/
 		       .alu__cond_3a	(alu__cond_3a),
 		       .alu__out_3a	(alu__out_3a[31:0]),
 		       .c__branch_3a	(c__branch_3a[1:0]),
+		       .c__mem_addr_3a	(c__mem_addr_3a[7:0]),
+		       .c__mem_write_3a	(c__mem_write_3a),
 		       .c__to_push_3a	(c__to_push_3a[2:0]),
 		       .instruction_3a	(instruction_3a[47:0]),
 		       .pc_3a		(pc_3a[31:0]),
@@ -130,6 +136,7 @@ module cpu(/*AUTOARG*/
 		       .c__alu_left_2a	(c__alu_left_2a[1:0]),
 		       .c__alu_right_2a	(c__alu_right_2a[1:0]),
 		       .c__branch_2a	(c__branch_2a[1:0]),
+		       .c__mem_write_2a	(c__mem_write_2a),
 		       .c__to_push_2a	(c__to_push_2a[2:0]),
 		       .c__r0_2a	(c__r0_2a),
 		       .c__r1_2a	(c__r1_2a),
@@ -161,6 +168,8 @@ module cpu(/*AUTOARG*/
 		     .alu__cond_3a	(alu__cond_3a),
 		     .alu__out_3a	(alu__out_3a[31:0]),
 		     .c__branch_3a	(c__branch_3a[1:0]),
+		     .c__mem_addr_3a	(c__mem_addr_3a[7:0]),
+		     .c__mem_write_3a	(c__mem_write_3a),
 		     .c__to_push_3a	(c__to_push_3a[2:0]),
 		     .instruction_3a	(instruction_3a[47:0]),
 		     .pc_3a		(pc_3a[31:0]),
