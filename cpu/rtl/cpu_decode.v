@@ -1,8 +1,8 @@
 module cpu_decode(/*AUTOARG*/
    // Outputs
    alu__op_2a, c__alu_left_2a, c__alu_right_2a, c__branch_2a,
-   c__to_push_2a, instruction_2a, pc_2a, stall_2a, st__top_0_2a,
-   st__top_1_2a, st__to_pop_2a,
+   c__to_push_2a, c__r0_2a, c__r1_2a, instruction_2a, pc_2a, stall_2a,
+   st__top_0_2a, st__top_1_2a, st__to_pop_2a,
    // Inputs
    instruction_1a, kill_4a, pc_1a, st__push_5a, st__to_pop_5a,
    st__to_push_5a, c__to_push_3a, c__to_push_4a, st__to_pop_3a,
@@ -15,7 +15,9 @@ module cpu_decode(/*AUTOARG*/
    output [1:0]      c__alu_left_2a;
    output [1:0]      c__alu_right_2a;
    output [1:0]      c__branch_2a;
-   output [1:0]      c__to_push_2a;
+   output [2:0]      c__to_push_2a;
+   output            c__r0_2a;
+   output            c__r1_2a;
    output reg [47:0] instruction_2a;
    output reg [31:0] pc_2a;
    output 	     stall_2a;
@@ -29,8 +31,8 @@ module cpu_decode(/*AUTOARG*/
    input [10:0]	     st__to_pop_5a;
    input [34:0]      st__to_push_5a;
 
-   input [1:0]	     c__to_push_3a;
-   input [1:0] 	     c__to_push_4a;
+   input [2:0]	     c__to_push_3a;
+   input [2:0] 	     c__to_push_4a;
    input [10:0]      st__to_pop_3a;
    input [10:0]      st__to_pop_4a;
 
@@ -62,10 +64,12 @@ module cpu_decode(/*AUTOARG*/
 
    assign alu__op_2a = mc__control[5:1];
    assign st__to_pop_2a = { 9'b0, mc__control[7:6] };
-   assign c__to_push_2a = mc__control[9:8];
-   assign c__alu_right_2a = mc__control[11:10];
-   assign c__alu_left_2a = mc__control[13:12];
-   assign c__branch_2a = mc__control[15:14];
+   assign c__to_push_2a = mc__control[10:8];
+   assign c__alu_right_2a = mc__control[12:11];
+   assign c__alu_left_2a = mc__control[14:13];
+   assign c__branch_2a = mc__control[16:15];
+   assign c__r0_2a = mc__control[17];
+   assign c__r1_2a = mc__control[18];
 
    /// SEQUENTIAL LOGIC ///
 

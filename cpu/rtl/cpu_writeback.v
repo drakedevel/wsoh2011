@@ -13,7 +13,7 @@ module cpu_writeback(/*AUTOARG*/
    output [10:0] st__to_pop_5a;
    output [34:0] st__to_push_5a;
    input [31:0]  pc_4a;
-   input [1:0]	 c__to_push_4a;
+   input [2:0]	 c__to_push_4a;
    input [10:0]  st__to_pop_4a;
    input [34:0]  st__to_push_4a;
    
