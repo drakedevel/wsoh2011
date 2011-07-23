@@ -5,9 +5,9 @@ module cpu_memory(/*AUTOARG*/
    branch_target_4a, c__to_push_4a, kill_4a, pc_4a, st__to_pop_4a,
    st__to_push_4a, Hsync, Vsync, leds, vgaBlue, vgaGreen, vgaRed,
    // Inputs
-   alu__cond_3a, alu__out_3a, c__branch_3a, c__to_push_3a,
-   instruction_3a, pc_3a, r0_3a, r1_3a, st__to_pop_3a, clk, rst_b,
-   switches
+   alu__cond_3a, alu__out_3a, c__branch_3a, c__mem_addr_3a,
+   c__mem_write_3a, c__to_push_3a, instruction_3a, pc_3a, r0_3a,
+   r1_3a, st__to_pop_3a, clk, rst_b, switches
    );
 
    /// PIPELINE INTERFACE ///
@@ -21,6 +21,8 @@ module cpu_memory(/*AUTOARG*/
    input 	     alu__cond_3a;
    input [31:0]      alu__out_3a;
    input [1:0] 	     c__branch_3a;
+   input [7:0] 	     c__mem_addr_3a;   
+   input 	     c__mem_write_3a;
    input [2:0] 	     c__to_push_3a;
    input [47:0]      instruction_3a;
    input [31:0]      pc_3a;
@@ -108,7 +110,11 @@ module cpu_memory(/*AUTOARG*/
       end
    end
 
-   iobus IO(/*AUTOINST*/
+   iobus IO(.bus__rdstrobe_3a(1'b0),
+	    .bus__wrstrobe_3a(c__mem_write_3a),
+	    .bus__address_3a(c__mem_addr_3a),
+	    .bus__wrdata_3a(alu__out_3a),
+	    /*AUTOINST*/
 	    // Outputs
 	    .bus__rddata_4a		(bus__rddata_4a[31:0]),
 	    .leds			(leds[7:0]),
@@ -120,9 +126,5 @@ module cpu_memory(/*AUTOARG*/
 	    // Inputs
 	    .clk			(clk),
 	    .rst_b			(rst_b),
-	    .bus__rdstrobe_3a		(bus__rdstrobe_3a),
-	    .bus__wrstrobe_3a		(bus__wrstrobe_3a),
-	    .bus__address_3a		(bus__address_3a[7:0]),
-	    .bus__wrdata_3a		(bus__wrdata_3a[31:0]),
 	    .switches			(switches[7:0]));
 endmodule

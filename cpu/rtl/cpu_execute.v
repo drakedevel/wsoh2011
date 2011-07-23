@@ -2,12 +2,14 @@
 
 module cpu_execute(/*AUTOARG*/
    // Outputs
-   alu__cond_3a, alu__out_3a, c__branch_3a, c__to_push_3a,
-   instruction_3a, pc_3a, r0_3a, r1_3a, st__to_pop_3a,
+   alu__cond_3a, alu__out_3a, c__branch_3a, c__mem_addr_3a,
+   c__mem_write_3a, c__to_push_3a, instruction_3a, pc_3a, r0_3a,
+   r1_3a, st__to_pop_3a,
    // Inputs
    alu__op_2a, c__alu_left_2a, c__alu_right_2a, c__branch_2a,
-   c__to_push_2a, c__r0_2a, c__r1_2a, instruction_2a, kill_4a, pc_2a,
-   pc_1a, st__top_0_2a, st__top_n_2a, st__to_pop_2a, clk, rst_b
+   c__mem_write_2a, c__to_push_2a, c__r0_2a, c__r1_2a, instruction_2a,
+   kill_4a, pc_2a, pc_1a, st__top_0_2a, st__top_n_2a, st__to_pop_2a,
+   clk, rst_b
    );
 
    /// PIPELINE INTERFACE ///
@@ -15,6 +17,8 @@ module cpu_execute(/*AUTOARG*/
    output reg        alu__cond_3a;
    output reg [31:0] alu__out_3a;
    output reg [1:0]  c__branch_3a;
+   output reg [7:0]  c__mem_addr_3a;
+   output reg 	     c__mem_write_3a;
    output reg [2:0]  c__to_push_3a;
    output reg [47:0] instruction_3a;
    output reg [31:0] pc_3a;
@@ -26,6 +30,7 @@ module cpu_execute(/*AUTOARG*/
    input [1:0] 	     c__alu_left_2a;
    input [1:0] 	     c__alu_right_2a;
    input [1:0] 	     c__branch_2a;
+   input 	     c__mem_write_2a;
    input [2:0]	     c__to_push_2a;
    input             c__r0_2a;
    input             c__r1_2a;
@@ -94,6 +99,8 @@ module cpu_execute(/*AUTOARG*/
 	 alu__cond_3a <= 1'h0;
 	 alu__out_3a <= 32'h0;
 	 c__branch_3a <= 2'h0;
+	 c__mem_addr_3a <= 8'h0;
+	 c__mem_write_3a <= 1'h0;
 	 c__to_push_3a <= 3'h0;
 	 instruction_3a <= 48'h0;
 	 pc_3a <= 32'h0;
@@ -110,10 +117,13 @@ module cpu_execute(/*AUTOARG*/
 	 if (killed) begin
 	    st__to_pop_3a <= 11'h0;
 	    c__branch_3a <= 2'h0;
+	    c__mem_write_3a <= 1'h0;
 	    c__to_push_3a <= 3'h0;
          end else begin
 	    st__to_pop_3a <= st__to_pop_2a;
 	    c__branch_3a <= c__branch_2a;
+	    c__mem_addr_3a <= st__top_n_2a;
+	    c__mem_write_3a <= c__mem_write_2a;
 	    c__to_push_3a <= c__to_push_2a;
          end
 
