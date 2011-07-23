@@ -36,12 +36,12 @@ module top(/*AUTOARG*/
    /// INTERNAL SIGNALS ///
 
    reg [26:0] 		counter;
-   reg [1:0] 		state;
+   reg [2:0] 		state;
    reg 			rst_b = 1'b0;
 
    reg [31:0]           vg__data;
    reg [RECTBITS:0] 	vg__addr;
-   reg 			vg__rect_write;
+   reg 			vg__write;
    
    /*AUTOWIRE*/
  
@@ -63,7 +63,7 @@ module top(/*AUTOARG*/
 	 state <= 2'h0;
 	 vg__addr <= {(1+(RECTBITS)){1'b0}};
 	 vg__data <= 32'h0;
-	 vg__rect_write <= 1'h0;
+	 vg__write <= 1'h0;
 	 // End of automatics
       end else begin
 	 counter <= counter + 1;
@@ -73,17 +73,17 @@ module top(/*AUTOARG*/
                         // padding, enable, color, y1, x1
               vg__data <= { 3'h0, 1'b1, 8'b11100000, 10'd0, 10'd0 };
 	      vg__addr <= 7'd0;
-	      vg__rect_write <= 1'b1;
+	      vg__write <= 1'b1;
 	   end
            STATE_TL_A1: begin
 	      state <= STATE_TL_WAIT;
                         // padding, y2, x2
               vg__data <= { 12'h000, 10'd299, 10'd399 };
 	      vg__addr <= 7'd1;
-	      vg__rect_write <= 1'b1;
+	      vg__write <= 1'b1;
 	   end
 	   STATE_TL_WAIT: begin
-	      vg__rect_write <= 1'b0;	      
+	      vg__write <= 1'b0;	      
 	      if (counter == 27'b0)
 		state <= STATE_BR_A0;
 	   end
@@ -92,17 +92,17 @@ module top(/*AUTOARG*/
                         // padding, enable, color, y1, x1
               vg__data <= { 3'h0, 1'b1, 8'b00000011, 10'd300, 10'd400 };
 	      vg__addr <= 7'd2;
-	      vg__rect_write <= 1'b1;
+	      vg__write <= 1'b1;
 	   end
            STATE_BR_A1: begin
 	      state <= STATE_BR_WAIT;
                         // padding, y2, x2
               vg__data <= { 12'h000, 10'd599, 10'd799 };
 	      vg__addr <= 7'd3;
-	      vg__rect_write <= 1'b1;
+	      vg__write <= 1'b1;
 	   end
 	   STATE_BR_WAIT: begin
-	      vg__rect_write <= 1'b0;
+	      vg__write <= 1'b0;
 	      if (counter == 27'b0)
 		state <= STATE_TL_A0;
 	   end

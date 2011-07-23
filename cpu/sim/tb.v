@@ -8,7 +8,6 @@ module tb();
    /*AUTOWIRE*/
    // Beginning of automatic wires (for undeclared instantiated-module outputs)
    wire [31:0]		hatch_address;		// From DUT of cpu.v
-   wire [10:0]		st__saved_pc_3a;	// From DUT of cpu.v
    wire [10:0]		st__sp_2a;		// From DUT of cpu.v
    // End of automatics
 
@@ -41,13 +40,11 @@ module tb();
    cpu DUT(/*AUTOINST*/
 	   // Outputs
 	   .hatch_address		(hatch_address[31:0]),
-	   .st__saved_pc_3a		(st__saved_pc_3a[10:0]),
 	   .st__sp_2a			(st__sp_2a[10:0]),
 	   // Inputs
 	   .clk				(clk),
 	   .hatch_instruction		(hatch_instruction[47:0]),
 	   .rst_b			(rst_b),
-	   .st__saved_pc_2a		(st__saved_pc_2a[10:0]),
 	   .st__saved_sp_3a		(st__saved_sp_3a[10:0]));
    
 endmodule
